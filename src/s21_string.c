@@ -58,7 +58,7 @@ char *s21_strrchr(const char *str, int c) {
 
 int compare(const char *x, const char *y) {
 	int returnCode = 1;
-	
+
     while (*x && *y) {
         if (*x != *y) {
             returnCode = 0;
@@ -71,7 +71,7 @@ int compare(const char *x, const char *y) {
     return returnCode;
 }
  
-const char* s21_strstr(const char* haystack, const char* needle) {
+const char *s21_strstr(const char *haystack, const char *needle) {
     while (*haystack != '\0') {
         if (*haystack == *needle && compare(haystack, needle)) {
            return haystack;
@@ -80,4 +80,48 @@ const char* s21_strstr(const char* haystack, const char* needle) {
     }
  
     return NULL;
+}
+
+int s21_memcmp(const void *str1, const void *str2, s21_size_t n) {
+
+	while (*((char*)str1) != '\0' && *((char*)str2) != '\0' && n != 0) {
+		if (*((char*)str1) != *((char*)str2)) {
+           return *((char*)str1) - *((char*)str2);
+        }
+		n--;
+		str1++;
+		str2++;
+	}
+
+	return 0;
+}
+
+int s21_strncmp(const char *str1, const char *str2, s21_size_t n) {
+
+	while ( n != 0) {
+		if (*((char*)str1) != *((char*)str2)) {
+           return *((char*)str1) - *((char*)str2);
+        }
+		n--;
+		str1++;
+		str2++;
+	}
+
+	return 0;
+}
+
+char *s21_strncat(char *dest, const char *src, s21_size_t n) {
+	char *ptr = dest + s21_strlen(dest);
+
+	while(*src != '\0' && n != 0) {
+		*ptr++ = *src++;
+		n--;
+	}
+	*ptr = '\0';
+
+	return dest;
+}
+
+s21_size_t s21_strcspn(const char *str1, const char *str2) {
+	
 }
