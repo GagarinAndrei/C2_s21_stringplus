@@ -16,7 +16,7 @@ typedef struct {
   char c;
   char* s;
   unsigned int u;
-  int n;
+  int* n;
 } Specifiers_s;
 
 typedef struct {
@@ -52,12 +52,8 @@ typedef struct {
   char* str;
 } Arguments_s;
 
-int s21_sprintf(char* str, const char* format, ...);
-void formatStringHundler(char* str, const char* format, Arguments_s* arguments,
-                         va_list factor);
-
 int s21_sprintf(char *str, const char *format, ...);
-void formatStringHundler(char* str, const char* format, Arguments_s* arguments, va_list factor);
+void formatStringHundler(char* str, const char* format, Arguments_s* arguments, va_list factor, char* startStr);
 
 char* diSpecifierHandler(char* str, Arguments_s* arguments, va_list factor);
 char* fSpecifierHandler(char* str, Arguments_s* arguments, va_list factor);
@@ -66,7 +62,7 @@ char* sSpecifierHandler(char* str, Arguments_s* arguments, va_list factor);
 char* uSpecifierHandler(char* str, Arguments_s* arguments, va_list factor);
 char* oSpecifierHandler(char* str, Arguments_s* arguments, va_list factor);
 char* xSpecifierHandler(char* str, Arguments_s* arguments, va_list factor);
-void nSpecifierHandler(char* str, Arguments_s* arguments, va_list factor);
+void nSpecifierHandler(char* str, Arguments_s* arguments, va_list factor, char* startStr);
 
 const char* flagsHandler(const char* ch, Arguments_s* arguments);
 void resetArguments(Arguments_s* arguments);
@@ -91,7 +87,7 @@ int main() {
     char str2[1000];
     char strTest[] = "Test";
     char strTest2[] = "StringS!";
-    char *str3 = "%d %s free %n %X %s % d %s %d %.10c %.13s %u %%TFR %20.4f ";
+    char *str3 = "%d %s free  %n %X %s % d %s %d %.10c %.13s %u %%TFR %20.4f ";
     unsigned int val1 = 32767 * 4096 * 16 + 65535;
     int val2 = 255;
     int val3 = 3231;
@@ -115,12 +111,12 @@ int main() {
 
 int s21_sprintf(char* str, const char *format, ...) {
   Arguments_s arguments = {0};
-  arguments.str = str;
 
   va_list factor;
   va_start(factor, format);
+  char* startStr = str;
 
-  formatStringHundler(str, format, &arguments, factor);
+  formatStringHundler(str, format, &arguments, factor, startStr);
 
   va_end(factor);
 
@@ -128,7 +124,7 @@ int s21_sprintf(char* str, const char *format, ...) {
 }
 
 void formatStringHundler(char* str, const char* format, Arguments_s* arguments,
-                         va_list factor) {
+                         va_list factor, char* startStr) {
   for (const char* ch = format; *ch; ch++) {
     if (*ch != '%') {
       *str++ = *ch;
@@ -164,7 +160,10 @@ void formatStringHundler(char* str, const char* format, Arguments_s* arguments,
         str = xSpecifierHandler(str, arguments, factor);
         break;
       case 'n':
-        nSpecifierHandler(str, arguments, factor);
+        nSpecifierHandler(str, arguments, factor, startStr);
+        break;
+      case 'p':
+        // pSpecifierHandler(str, arguments, factor);
         break;
       case '%':
         *str++ = *ch;
@@ -267,7 +266,7 @@ char* uSpecifierHandler(char* str, Arguments_s* arguments, va_list factor) {
   return str;
 }
 
-// Обработка спецификатора %u
+// Обработка спецификатора %o
 char* oSpecifierHandler(char* str, Arguments_s* arguments, va_list factor) {
   if(arguments->length.h) {
     arguments->specifiers.o = (short)va_arg(factor, int);
@@ -313,11 +312,11 @@ char* xSpecifierHandler(char* str, Arguments_s* arguments, va_list factor) {
   return str;
 }
 
-void nSpecifierHandler(char* str, Arguments_s* arguments, va_list factor) {
-  arguments->specifiers.n = va_arg(factor, int);
+void nSpecifierHandler(char* str, Arguments_s* arguments, va_list factor, char* startStr) {
+  arguments->specifiers.n = va_arg(factor, int*);
+  int value = str - startStr;
 
-  // int ptr = strlen(str);
-  printf("%p -- %p\n", arguments->str, str);
+  *arguments->specifiers.n = value;
 }
 
 const char* flagsHandler(const char* ch, Arguments_s* arguments) {
