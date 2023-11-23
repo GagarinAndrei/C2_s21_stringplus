@@ -21,8 +21,8 @@ s21_string.a:
 
 test: clean s21_string.a
 #	$(GCC) $(CFALGS) -L. -ls21_string $(CHECKFLAGS) -o s21_string
-#	$(GCC) $(CFALGS) $(TESTS_SOURCES) -L. -ls21_string $(CHECKFLAGS) -o s21_string
-#	./s21_string
+	$(GCC) $(CFALGS) $(TESTS_SOURCES) -L. -ls21_string $(CHECKFLAGS) -o s21_string
+	./s21_string
 # удалить использование библиотеки check
 
 gcov_report: clean s21_string.a
