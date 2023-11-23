@@ -5,7 +5,7 @@ START_TEST(test_trim_1) {
   char s3[] = "!?-";
   char s4[] = "hello, world";
   char *s2 = s21_trim(s1, s3);
-  ck_assert_pstr_eq(s4, s2);
+  ck_assert_str_eq(s4, s2);
   // if (s2) free(s2);
 }
 END_TEST
@@ -15,7 +15,7 @@ START_TEST(test_trim_2) {
   char s3[] = "";
   char *s4 = "";
   char *s2 = s21_trim(s1, s3);
-  ck_assert_pstr_eq(s4, s2);
+  ck_assert_str_eq(s4, s2);
   // if (s2) free(s2);
 }
 END_TEST
@@ -25,7 +25,7 @@ START_TEST(test_trim_3) {
   char s3[] = "";
   char *s4 = S21_NULL;
   char *s2 = s21_trim(s1, s3);
-  ck_assert_pstr_eq(s4, s2);
+  ck_assert_str_eq(s4, s2);
   // if (s2) free(s2);
 }
 END_TEST
@@ -35,7 +35,7 @@ START_TEST(test_trim_4) {
   char s3[] = "!?";
   char s4[] = "abcdefghij";
   char *s2 = s21_trim(s1, s3);
-  ck_assert_pstr_eq(s4, s2);
+  ck_assert_str_eq(s4, s2);
   // if (s2) free(s2);
 }
 END_TEST
@@ -45,7 +45,7 @@ START_TEST(test_trim_5) {
   char s3[] = "333";
   char *s4 = "abc";
   char *s2 = s21_trim(s1, s3);
-  ck_assert_pstr_eq(s4, s2);
+  ck_assert_str_eq(s4, s2);
   // if (s2) free(s2);
 }
 END_TEST
@@ -55,7 +55,7 @@ START_TEST(test_trim_6) {
   char s3[] = "?!";
   char *s4 = "hello, world";
   char *s2 = s21_trim(s1, s3);
-  ck_assert_pstr_eq(s4, s2);
+  ck_assert_str_eq(s4, s2);
   // if (s2) free(s2);
 }
 END_TEST
@@ -65,7 +65,7 @@ START_TEST(test_trim_7) {
   char *s3 = S21_NULL;
   char *s4 = S21_NULL;
   char *s2 = s21_trim(s1, s3);
-  ck_assert_pstr_eq(s4, s2);
+  ck_assert_str_eq(s4, s2);
   // if (s2) free(s2);
 }
 END_TEST
@@ -75,7 +75,7 @@ START_TEST(test_trim_8) {
   char s3[] = "";
   char s4[] = "";
   char *s2 = s21_trim(s1, s3);
-  ck_assert_pstr_eq(s4, s2);
+  ck_assert_str_eq(s4, s2);
   // if (s2) free(s2);
 }
 END_TEST
@@ -85,7 +85,7 @@ START_TEST(test_trim_9) {
   char *s3 = S21_NULL;
   char *s4 = " wtf ";
   char *s2 = s21_trim(s1, s3);
-  ck_assert_pstr_eq(s4, s2);
+  ck_assert_str_eq(s4, s2);
   // if (s2) free(s2);
 }
 END_TEST
@@ -95,7 +95,7 @@ START_TEST(test_trim_10) {
   char *s3 = "";
   char *s4 = " wtf ";
   char *s2 = s21_trim(s1, s3);
-  ck_assert_pstr_eq(s4, s2);
+  ck_assert_str_eq(s4, s2);
   // if (s2) free(s2);
 }
 END_TEST

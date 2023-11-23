@@ -6,7 +6,7 @@ START_TEST(test_insert_1) {
   char s4[] = "hello, hELLO, WORLD!world!";
   s21_size_t num = 7;
   char *s2 = s21_insert(s1, s3, num);
-  ck_assert_pstr_eq(s4, s2);
+  ck_assert_str_eq(s4, s2);
   // if (s2) free(s2);
 }
 END_TEST
@@ -17,7 +17,7 @@ START_TEST(test_insert_2) {
   char *s4 = S21_NULL;
   s21_size_t num = 7;
   char *s2 = s21_insert(s1, s3, num);
-  ck_assert_pstr_eq(s4, s2);
+  ck_assert_str_eq(s4, s2);
   // if (s2) free(s2);
 }
 END_TEST
@@ -28,7 +28,7 @@ START_TEST(test_insert_3) {
   char *s4 = S21_NULL;
   s21_size_t num = 0;
   char *s2 = s21_insert(s1, s3, num);
-  ck_assert_pstr_eq(s4, s2);
+  ck_assert_str_eq(s4, s2);
   // if (s2) free(s2);
 }
 END_TEST
@@ -39,7 +39,7 @@ START_TEST(test_insert_4) {
   char s4[] = "abc\'I WAS HERE\'defghij";
   s21_size_t num = 3;
   char *s2 = s21_insert(s1, s3, num);
-  ck_assert_pstr_eq(s4, s2);
+  ck_assert_str_eq(s4, s2);
   // if (s2) free(s2);
 }
 END_TEST
@@ -50,7 +50,7 @@ START_TEST(test_insert_5) {
   char *s4 = S21_NULL;
   s21_size_t num = 10;
   char *s2 = s21_insert(s1, s3, num);
-  ck_assert_pstr_eq(s4, s2);
+  ck_assert_str_eq(s4, s2);
   // if (s2) free(s2);
 }
 END_TEST
@@ -61,7 +61,7 @@ START_TEST(test_insert_6) {
   char *s4 = S21_NULL;
   s21_size_t num = -1;
   char *s2 = s21_insert(s1, s3, num);
-  ck_assert_pstr_eq(s4, s2);
+  ck_assert_str_eq(s4, s2);
   // if (s2) free(s2);
 }
 END_TEST
@@ -72,7 +72,7 @@ START_TEST(test_insert_7) {
   char *s4 = S21_NULL;
   s21_size_t num = 0;
   char *s2 = s21_insert(s1, s3, num);
-  ck_assert_pstr_eq(s4, s2);
+  ck_assert_str_eq(s4, s2);
   // if (s2) free(s2);
 }
 END_TEST
@@ -83,7 +83,7 @@ START_TEST(test_insert_8) {
   char s4[] = "";
   s21_size_t num = 0;
   char *s2 = s21_insert(s1, s3, num);
-  ck_assert_pstr_eq(s4, s2);
+  ck_assert_str_eq(s4, s2);
   // if (s2) free(s2);
 }
 END_TEST
@@ -94,7 +94,7 @@ START_TEST(test_insert_9) {
   char *s4 = S21_NULL;
   s21_size_t num = 0;
   char *s2 = s21_insert(s1, s3, num);
-  ck_assert_pstr_eq(s4, s2);
+  ck_assert_str_eq(s4, s2);
   // if (s2) free(s2);
 }
 END_TEST
@@ -105,7 +105,7 @@ START_TEST(test_insert_10) {
   char *s4 = S21_NULL;
   s21_size_t num = 0;
   char *s2 = s21_insert(s1, s3, num);
-  ck_assert_pstr_eq(s2, s4);
+  ck_assert_str_eq(s2, s4);
   // if (s2) free(s2);
 }
 END_TEST
