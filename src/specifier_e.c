@@ -44,16 +44,17 @@ char* specifierE(double number) {
 
   double fraction = fractionOfE(number);
   int exponentNum = exponent(number);
-  char* exponentStr = intInChar(exponentNum);
-
   char* result = doubleInChar(fraction);
+  char* exponentStr = intInChar(exponentNum);
+  printf("STR EXP**** %s\n", exponentStr);
+  
 
   s21_strncat(result, charOfExponent, s21_strlen(charOfExponent));
   s21_strncat(result, exponentStr, s21_strlen(exponentStr));
 
   // if (s21_strncmp(exponentStr, "-e", s21_strlen(exponentStr))) exponentNum =
   // -exponentNum;  //проверка, убрать
-  printf("CHAR EXP**** %10c\n", charOfExponent);
+  printf("CHAR EXP**** %10s\n", charOfExponent);
   printf("FRACTION NUMBER**** %f\n", fraction);
   // printf("EXPONENT**** %10d\n", exponentNum);
   printf("CHECK**** %10f\n", fraction * pow(10.0, exponentNum));
