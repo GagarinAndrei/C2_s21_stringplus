@@ -1,9 +1,9 @@
 #include "s21_utils.h"
 
-#include <errno.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
+#include <errno.h>
 
 #include "lib_files/s21_string.h"
 
@@ -29,8 +29,7 @@ char* intInChar(int number) {
   int i = digitsInIntCounter(number);
   char* result = (char*)calloc(i, sizeof(char));
   if (result == S21_NULL) {
-    printf("Memory not allocated.\n");
-    exit(0);
+    printError(errno);
   }
 
   char* ptr = result;
@@ -47,7 +46,7 @@ char* intInChar(int number) {
   if (isNegative) {
     result[0] = '-';
   }
-
+  result[s21_strlen(result)] = '\0';
   free(result);
   return ptr;
 }
@@ -82,11 +81,10 @@ char* doubleInChar(double number) {
   result[i++] = '.';
   result = realloc(result, sizeof(char));
 
-
   afterComma += 0.0000000005;
   afterComma *= 1000000000;
 
-  while((int)afterComma % 10 == 0) {
+  while ((int)afterComma % 10 == 0) {
     afterComma /= 10;
   }
 
@@ -119,20 +117,17 @@ char* conversionDexInHexOrOcta(int number, int numeralSystem) {
   int tmpNumber = 0;
   char* result = (char*)malloc(sizeof(int) * i);
   if (result == S21_NULL) {
-    printf("%s\n", s21_strerror(errno));
-    exit(1);
+    printError(errno);
   }
   int* tmpResult = (int*)malloc(sizeof(int));
   if (tmpResult == S21_NULL) {
-    printf("%s\n", s21_strerror(errno));
-    exit(1);
+    printError(errno);
   }
   if (number != 0) {
     while (maxIntDiv > 0) {
       tmpResult = realloc(tmpResult, sizeof(int) * i + 1);
       if (tmpResult == S21_NULL) {
-        printf("%s\n", s21_strerror(errno));
-        exit(1);
+        printError(errno);
       }
       tmpNumber = maxIntDiv % numeralSystem;
       maxIntDiv = maxIntDiv / numeralSystem;
@@ -153,10 +148,15 @@ char* conversionDexInHexOrOcta(int number, int numeralSystem) {
     j++;
     i--;
   }
-  
+
   result[j] = '\0';
 
   free(tmpResult);
   free(result);
   return result;
+}
+
+void printError(int error) {
+  printf("%s\n", s21_strerror(error));
+  exit(1);
 }
