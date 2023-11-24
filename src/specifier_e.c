@@ -59,5 +59,6 @@ char* exponentOfE(double number) {
   }
   s21_strncat(result, exponentStr, s21_strlen(exponentStr));
   char* resultPtr = result;
+  free(result);
   return resultPtr;
 }
