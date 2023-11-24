@@ -85,7 +85,7 @@ int main() {
     char strTest[] = "Test";
     char strTest2[] = "StringS!";
     // char *str3 = "%d %s free %.p %n %X %s % d %s %d %.10c %.13s %u %%TFR %20.4f ";
-    char *str3 = "&%#10x&";
+    char *str3 = "&%e&";
     unsigned int val1 = 32767 * 4096 * 16 + 65535;
     int val2 = 255;
     int val3 = 3231;
@@ -96,8 +96,8 @@ int main() {
     int valN1 = 0;
     int valN2 = 0;
      
-     sprintf(str1, str3, 8 ,val3 );
-     s21_sprintf(str2, str3, 8 ,val3 );
+     sprintf(str1, str3,  val5);
+    //  s21_sprintf(str2, str3, val5 );
     // sprintf(str1, str3, val1, strTest, &ch, &valN1, val2, strTest2, val3, strTest2, val4, ch, strTest, uVal, val5);
     // s21_sprintf(str2, str3, val1, strTest, &ch, &valN2, val2, strTest2, val3, strTest2, val4, ch, strTest, uVal, val5);
 
@@ -164,6 +164,9 @@ void formatStringHandler(char* str, const char* format, Arguments_s* arguments,
         break;
       case 'p':
         str = pSpecifierHandler(str, arguments, factor);
+        break;
+      case 'e':
+        str = eSpecifierHandler(str, arguments, factor);
         break;
       case '%':
         *str++ = *ch;

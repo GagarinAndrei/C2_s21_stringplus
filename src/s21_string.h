@@ -28,13 +28,12 @@ void *s21_memcpy(void *dest, const void *src, s21_size_t n);
 void *s21_memset(void *str, int c, s21_size_t n);
 char *s21_strncpy(char *dest, const char *src, s21_size_t n);
 
-// int s21_sprintf(char *str, const char *format, ...);
+int s21_sprintf(char *str, const char *format, ...);
 
-void *s21_to_lower(const char *str);
-void *s21_to_upper(const char *str);
-void *s21_trim(const char *src, const char *trim_chars);
-char *s21_insert(const char *src, const char *str, s21_size_t start_index);
-void *s21_trim(const char *src, const char *trim_chars);
-char *s21_insert(const char *src, const char *str, s21_size_t start_index);
+// //
+// // Утилиты:
+char *intInChar(int number);
+char *specifierO(int number);
+char *specifierX(int number);
 
 #endif

@@ -1,13 +1,18 @@
 #include "s21_utils.h"
 
 #include <errno.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 
 #include <string.h> //dfkpgssgmbkfdgmboksmbombordbdrmbhokrsmnoknsrkbmdhm
 
 #include "lib_files/s21_string.h"
+
+void printError(int error) {
+  printf("%s\n", s21_strerror(error));
+  exit(1);
+}
 
 // считает количество % в строке формата
 int formatCounter(const char* string) {
@@ -31,8 +36,7 @@ char* intInChar(int number) {
   int i = digitsInIntCounter(number);
   char* result = (char*)calloc(i, sizeof(char));
   if (result == S21_NULL) {
-    printf("Memory not allocated.\n");
-    exit(0);
+    printError(errno);
   }
 
   char* ptr = result;
@@ -49,7 +53,7 @@ char* intInChar(int number) {
   if (isNegative) {
     result[0] = '-';
   }
-
+  result[s21_strlen(result)] = '\0';
   free(result);
   return ptr;
 }
@@ -84,11 +88,10 @@ char* doubleInChar(double number) {
   result[i++] = '.';
   result = realloc(result, sizeof(char));
 
-
   afterComma += 0.0000000005;
   afterComma *= 1000000000;
 
-  while((int)afterComma % 10 == 0) {
+  while ((int)afterComma % 10 == 0) {
     afterComma /= 10;
   }
 
@@ -121,20 +124,17 @@ char* conversionDexInHexOrOcta(int number, int numeralSystem) {
   int tmpNumber = 0;
   char* result = (char*)malloc(sizeof(int) * i);
   if (result == S21_NULL) {
-    printf("%s\n", s21_strerror(errno));
-    exit(1);
+    printError(errno);
   }
   int* tmpResult = (int*)malloc(sizeof(int));
   if (tmpResult == S21_NULL) {
-    printf("%s\n", s21_strerror(errno));
-    exit(1);
+    printError(errno);
   }
   if (number != 0) {
     while (maxIntDiv > 0) {
       tmpResult = realloc(tmpResult, sizeof(int) * i + 1);
       if (tmpResult == S21_NULL) {
-        printf("%s\n", s21_strerror(errno));
-        exit(1);
+        printError(errno);
       }
       tmpNumber = maxIntDiv % numeralSystem;
       maxIntDiv = maxIntDiv / numeralSystem;
@@ -155,7 +155,7 @@ char* conversionDexInHexOrOcta(int number, int numeralSystem) {
     j++;
     i--;
   }
-  
+
   result[j] = '\0';
 
   free(tmpResult);
@@ -190,7 +190,6 @@ char* reverseStr(char *str){
     return result;
 }
 
-
 // Преобразование адреса в строку
 char *ptrInChar(int *address) {
   char *str = calloc(14, sizeof(char));
@@ -214,4 +213,63 @@ char *ptrInChar(int *address) {
 
   return reverseStr(ptr);
 }
+
+char* exponentInStr(double number) { return ((int)number == 0) ? "e-" : "e+"; }
+
+double fractionOfE(double number) {
+  double result = number;
+  if ((int)result == 0) {
+    while ((int)result < 1) {
+      result *= 10;
+    }
+  } else {
+    while ((int)result / 10 != 0) {
+      result /= 10;
+    }
+  }
+  return result;
+}
+
+int exponent(double number) {
+  int result = 0;
+  if ((int)number == 0) {
+    while ((int)number < 1) {
+      number *= 10;
+      result++;
+    }
+  } else {
+    while ((int)number / 10 != 0) {
+      number /= 10;
+      result++;
+    }
+  }
+  return result;
+}
+
+char* exponentOfE(double number) {
+  int exponentNum = exponent(number);
+  char* charOfExponent = exponentInStr(number);
+  char* result =
+      (char*)malloc(sizeof(char) * 2 * (s21_strlen(charOfExponent) + 1));
+  if (result == S21_NULL) {
+    printError(errno);
+  }
+
+  s21_strncat(result, charOfExponent, s21_strlen(charOfExponent));
+
+  char* exponentStr = malloc(3 * sizeof(char));
+  char* ptr = exponentStr;
+  if (exponentNum < 10) {
+    *ptr++ = '0';
+    *ptr++ = (char)exponentNum + 48;
+    *ptr = '\0';
+  } else {
+    exponentStr = intInChar(exponentNum);
+  }
+  s21_strncat(result, exponentStr, s21_strlen(exponentStr));
+  char* resultPtr = result;
+  free(result);
+  return resultPtr;
+}
+
 
