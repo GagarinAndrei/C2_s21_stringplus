@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <math.h>
 
+#include <string.h> //dfkpgssgmbkfdgmboksmbombordbdrmbhokrsmnoknsrkbmdhm
+
 #include "lib_files/s21_string.h"
 
 // считает количество % в строке формата
@@ -160,3 +162,56 @@ char* conversionDexInHexOrOcta(int number, int numeralSystem) {
   free(result);
   return result;
 }
+
+// ПРЕОБРАЗОВАНИЕ DEC В OCTA
+char* octaIntInChar(int number) {
+  int numeralSystem = 8;
+  return conversionDexInHexOrOcta(number, numeralSystem);
+}
+
+// ПРЕОБРАЗОВАНИЕ DEC В HEXA
+char* hexaIntInChar(int number) {
+  int numeralSystem = 16;
+  return conversionDexInHexOrOcta(number, numeralSystem);
+}
+
+char* reverseStr(char *str){
+    if (str == S21_NULL || *str == '\0') return S21_NULL;
+    int end_str = s21_strlen(str);
+    int i = 0;
+    char* result = (char*)malloc(sizeof(char));
+    while (i < s21_strlen(str)){
+        result[i] =  str[end_str - 1];
+        i++; 
+        end_str--;
+    }
+    result[i] = '\0';
+    free(result);
+    return result;
+}
+
+
+// Преобразование адреса в строку
+char *ptrInChar(int *address) {
+  char *str = calloc(14, sizeof(char));
+  char *ptr = str;
+  
+  s21_size_t *addressPtr = (s21_size_t*)address;
+  if (addressPtr == NULL) {
+    *str++ = '0';
+  } else {
+    while (addressPtr != 0 ) {
+      s21_size_t lastSymbol = ((s21_size_t)addressPtr) % 16;
+      lastSymbol < 10 ? (*str = 48 + lastSymbol)
+                       : (*str = 87 + lastSymbol);
+      addressPtr = ((s21_size_t *)(((s21_size_t)addressPtr) >> 4));
+      *str++;
+    }
+  }
+  *str = 'x';
+  *str++;
+  *str = '0';
+
+  return reverseStr(ptr);
+}
+
