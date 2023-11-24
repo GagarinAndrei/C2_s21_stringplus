@@ -1,9 +1,9 @@
 #include "s21_utils.h"
 
+#include <errno.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <errno.h>
 
 #include "lib_files/s21_string.h"
 

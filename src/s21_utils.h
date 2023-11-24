@@ -1,7 +1,6 @@
 #ifndef S21_UTILS_H
 #define S21_UTILS_H
 
-
 int formatCounter(const char* string);
 
 int digitsInIntCounter(int n);
