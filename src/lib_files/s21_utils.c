@@ -5,9 +5,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <string.h> //dfkpgssgmbkfdgmboksmbombordbdrmbhokrsmnoknsrkbmdhm
+// #include <string.h> //dfkpgssgmbkfdgmboksmbombordbdrmbhokrsmnoknsrkbmdhm
 
-#include "lib_files/s21_string.h"
+#include "s21_string.h"
 
 void printError(int error) {
   printf("%s\n", s21_strerror(error));
@@ -178,7 +178,7 @@ char* hexaIntInChar(int number) {
 char* reverseStr(char *str){
     if (str == S21_NULL || *str == '\0') return S21_NULL;
     int end_str = s21_strlen(str);
-    int i = 0;
+    s21_size_t i = 0;
     char* result = (char*)malloc(sizeof(char));
     while (i < s21_strlen(str)){
         result[i] =  str[end_str - 1];
@@ -204,11 +204,11 @@ char *ptrInChar(int *address) {
       lastSymbol < 10 ? (*str = 48 + lastSymbol)
                        : (*str = 87 + lastSymbol);
       addressPtr = ((s21_size_t *)(((s21_size_t)addressPtr) >> 4));
-      *str++;
+      *str = *(str + 1);
     }
   }
   *str = 'x';
-  *str++;
+  *str = *(str + 1);
   *str = '0';
 
   return reverseStr(ptr);
@@ -280,11 +280,11 @@ char* exponentOfE(double number) {
   } else {
     exponentStr = intInChar(exponentNum);
   }
-  free(exponentStr);
+  // free(exponentStr);
 
   while (*exponentStr) *result++ = *exponentStr++;
   *result = '\0';
 
-  free(resultPtr);
+  // free(resultPtr);
   return resultPtr;
 }

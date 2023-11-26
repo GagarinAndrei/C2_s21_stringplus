@@ -242,7 +242,7 @@ START_TEST(sprintf_16_HEX) {
 }
 END_TEST
 
-Suite *test_sprintf_HEX(void) {
+Suite *test_sprintf_hex2(void) {
   Suite *s = suite_create("\033[45m-=S21_SPRINTF_HEX2=-\033[0m");
   TCase *tc = tcase_create("sprintf_tc");
 
