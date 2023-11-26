@@ -5,8 +5,6 @@
 #include "s21_string.h"
 #define UNKNOWN_ERROR "Unknown error: "
 
-// ДОДЕЛАТЬ ПЕЧАТЬ НЕИЗВЕСТНЫХ ОШИБОК С КОДОМ ОШИБКИ
-// Unknown error: 107 УОТТАКУОТ
 struct Error {
   s21_size_t errorCode;
   char *errorMessage;
@@ -266,7 +264,7 @@ char *s21_strerror(int errnum) {
   char buffer[255] = {0};
   char *ptr = buffer;
   if (errnum < 0 || errnum > MAX_ERRORS_COUNT - 1)
-    sprintf(buffer, "%s%d", UNKNOWN_ERROR, errnum);
+    s21_sprintf(buffer, "%s%d", UNKNOWN_ERROR, errnum);
   return (errnum < 0 || errnum > MAX_ERRORS_COUNT - 1)
              ? ptr
              : errors[errnum].errorMessage;
