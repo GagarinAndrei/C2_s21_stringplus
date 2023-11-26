@@ -5,8 +5,6 @@
 #include "s21_string.h"
 #define UNKNOWN_ERROR "Unknown error: "
 
-// ДОДЕЛАТЬ ПЕЧАТЬ НЕИЗВЕСТНЫХ ОШИБОК С КОДОМ ОШИБКИ
-// Unknown error: 107 УОТТАКУОТ
 struct Error {
   s21_size_t errorCode;
   char *errorMessage;
