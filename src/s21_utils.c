@@ -102,6 +102,7 @@ char* doubleInChar(double number) {
     result = realloc(result, sizeof(char));
   }
 
+
   free(result);
   return ptr;
 }
