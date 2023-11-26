@@ -5,7 +5,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <string.h> //dfkpgssgmbkfdgmboksmbombordbdrmbhokrsmnoknsrkbmdhm
+
 #include "lib_files/s21_string.h"
+
+void printError(int error) {
+  printf("%s\n", s21_strerror(error));
+  exit(1);
+}
 
 // считает количество % в строке формата
 int formatCounter(const char* string) {
@@ -84,7 +91,7 @@ char* doubleInChar(double number) {
   afterComma += 0.0000000005;
   afterComma *= 1000000000;
 
-  while ((int)afterComma % 10 == 0) {
+  while ((int)afterComma % 10 == 0 && afterComma != 0) {
     afterComma /= 10;
   }
 
@@ -156,7 +163,128 @@ char* conversionDexInHexOrOcta(int number, int numeralSystem) {
   return result;
 }
 
-void printError(int error) {
-  printf("%s\n", s21_strerror(error));
-  exit(1);
+// ПРЕОБРАЗОВАНИЕ DEC В OCTA
+char* octaIntInChar(int number) {
+  int numeralSystem = 8;
+  return conversionDexInHexOrOcta(number, numeralSystem);
+}
+
+// ПРЕОБРАЗОВАНИЕ DEC В HEXA
+char* hexaIntInChar(int number) {
+  int numeralSystem = 16;
+  return conversionDexInHexOrOcta(number, numeralSystem);
+}
+
+char* reverseStr(char *str){
+    if (str == S21_NULL || *str == '\0') return S21_NULL;
+    int end_str = s21_strlen(str);
+    int i = 0;
+    char* result = (char*)malloc(sizeof(char));
+    while (i < s21_strlen(str)){
+        result[i] =  str[end_str - 1];
+        i++; 
+        end_str--;
+    }
+    result[i] = '\0';
+    free(result);
+    return result;
+}
+
+// Преобразование адреса в строку
+char *ptrInChar(int *address) {
+  char *str = calloc(14, sizeof(char));
+  char *ptr = str;
+  
+  s21_size_t *addressPtr = (s21_size_t*)address;
+  if (addressPtr == NULL) {
+    *str++ = '0';
+  } else {
+    while (addressPtr != 0 ) {
+      s21_size_t lastSymbol = ((s21_size_t)addressPtr) % 16;
+      lastSymbol < 10 ? (*str = 48 + lastSymbol)
+                       : (*str = 87 + lastSymbol);
+      addressPtr = ((s21_size_t *)(((s21_size_t)addressPtr) >> 4));
+      *str++;
+    }
+  }
+  *str = 'x';
+  *str++;
+  *str = '0';
+
+  return reverseStr(ptr);
+}
+
+char* exponentInStr(double number) {
+  return ((int)number == 0 && number != 0) ? "e-" : "e+";
+}
+
+double fractionOfE(double number) {
+  if (number == 0) return 0;
+  int minus = 0;
+  if (number < 0) {
+    number = -number;
+    minus = 1;
+  }
+  double result = number;
+
+  if ((int)result == 0) {
+    while ((int)result < 1) {
+      result *= 10;
+    }
+  } else {
+    while ((int)result / 10 != 0) {
+      result /= 10;
+    }
+  }
+
+  return (minus) ? -result : result;
+}
+
+int exponent(double number) {
+  if (number == 0) return 0;
+  if (number < 0) number = -number;
+
+  int result = 0;
+  if ((int)number == 0) {
+    while ((int)number < 1) {
+      number *= 10;
+      result++;
+    }
+  } else {
+    while ((int)number / 10 != 0) {
+      number /= 10;
+      result++;
+    }
+  }
+  return result;
+}
+
+char* exponentOfE(double number) {
+  char* resultPtr = "";
+  int exponentNum = exponent(number);
+  char* charOfExponent = exponentInStr(number);
+  char* result = (char*)malloc(sizeof(char));
+  resultPtr = result;
+  if (result == S21_NULL) {
+    printError(errno);
+  }
+
+  while (*charOfExponent != '\0') *result++ = *charOfExponent++;
+
+  char* exponentStr = malloc(3 * sizeof(char));
+  char* ptr = exponentStr;
+  if (exponentNum < 10) {
+    *ptr++ = '0';
+    *ptr++ = (char)exponentNum + 48;
+    *ptr = '\0';
+  } else {
+    exponentStr = intInChar(exponentNum);
+  }
+  free(exponentStr);
+
+  while (*exponentStr) *result++ = *exponentStr++;
+  *result = '\0';
+
+  free(resultPtr);
+  return resultPtr;
 }
