@@ -83,7 +83,7 @@ char* exponentOfE(double number) {
 
 int main() {
   char* line = malloc(sizeof(char) * 1000);
-  double num = -0.00010000;
+  double num = 4.0;
   sprintf(line, "***SPRINTF*** = %e\n", num);
   printf(line);
   printf("S21_SPRINTF*** = %f", fractionOfE(num));
