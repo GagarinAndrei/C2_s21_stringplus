@@ -92,12 +92,12 @@ int main() {
     char strTest[] = "Test";
     char strTest2[] = "StringS!";
     // char *str3 = "%d %s free %.p %n %X %s % d %s %d %.10c %.13s %u %%TFR %20.4f ";
-    char *str3 = "&%E&";
+    char *str3 = "&%#8.0f&";
     unsigned int val1 = 32767 * 4096 * 16 + 65535;
     int val2 = 255;
     int val3 = 3231;
     int val4 = 6;
-    double val5 = 10.0;
+    double val5 = 9.1;
     unsigned int uVal = 1808867574;
     char ch = 'Q';
     int valN1 = 0;
@@ -236,7 +236,6 @@ char* fSpecifierHandler(char* str, Arguments_s* arguments, va_list factor) {
     arguments->specifiers.f = va_arg(factor, double);
   }
   char* fString = doubleInChar(arguments->specifiers.f);
-  int spaces = spacesCounter(arguments, fString); // Нужна ли эта строка????
 
   if (arguments->flags.plus && arguments->specifiers.f > 0) {
     *str++ = '+';
@@ -364,9 +363,7 @@ char* eSpecifierHandler(char* str, Arguments_s* arguments, va_list factor) {
     arguments->specifiers.e = va_arg(factor, double);
   }
 
-  double specE = arguments->specifiers.e;
-  double fraction = fractionOfE(specE);
-
+  double fraction = fractionOfE(arguments->specifiers.e);
   char* fractionStr = doubleInChar(fraction);
   
   char* eString = malloc(sizeof(char));
@@ -546,12 +543,15 @@ char* printFormatWithSpaces(char* str, Arguments_s* arguments, const char* strin
 
 char* printSpecificatorE(char* str, Arguments_s* arguments, const char* string) {
   int isAfterComma = 0;
-  while(*string && arguments->accuracy.number > 0 && !(*string == 'e' || *string == 'E')) {
+  while(*string && arguments->accuracy.number >= 0 && !(*string == 'e' || *string == 'E')) {
     if (isAfterComma == 1) {
       arguments->accuracy.number--;
     }
     if(*string == '.') {
       isAfterComma = 1;
+      if(arguments->flags.sharp && arguments->accuracy.isNull) {
+        arguments->accuracy.number = -1;
+      }
     }
     *str++ = *string++;
   }
