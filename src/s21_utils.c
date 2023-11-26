@@ -215,10 +215,19 @@ char *ptrInChar(int *address) {
   return reverseStr(ptr);
 }
 
-char* exponentInStr(double number) { return ((int)number == 0) ? "e-" : "e+"; }
+char* exponentInStr(double number) {
+  return ((int)number == 0 && number != 0) ? "e-" : "e+";
+}
 
 double fractionOfE(double number) {
+  if (number == 0) return 0;
+  int minus = 0;
+  if (number < 0) {
+    number = -number;
+    minus = 1;
+  }
   double result = number;
+
   if ((int)result == 0) {
     while ((int)result < 1) {
       result *= 10;
@@ -228,10 +237,14 @@ double fractionOfE(double number) {
       result /= 10;
     }
   }
-  return result;
+
+  return (minus) ? -result : result;
 }
 
 int exponent(double number) {
+  if (number == 0) return 0;
+  if (number < 0) number = -number;
+
   int result = 0;
   if ((int)number == 0) {
     while ((int)number < 1) {
@@ -248,15 +261,16 @@ int exponent(double number) {
 }
 
 char* exponentOfE(double number) {
+  char* resultPtr = "";
   int exponentNum = exponent(number);
   char* charOfExponent = exponentInStr(number);
-  char* result =
-      (char*)malloc(sizeof(char) * 2 * (s21_strlen(charOfExponent) + 1));
+  char* result = (char*)malloc(sizeof(char));
+  resultPtr = result;
   if (result == S21_NULL) {
     printError(errno);
   }
 
-  s21_strncat(result, charOfExponent, s21_strlen(charOfExponent));
+  while (*charOfExponent != '\0') *result++ = *charOfExponent++;
 
   char* exponentStr = malloc(3 * sizeof(char));
   char* ptr = exponentStr;
@@ -267,10 +281,11 @@ char* exponentOfE(double number) {
   } else {
     exponentStr = intInChar(exponentNum);
   }
-  s21_strncat(result, exponentStr, s21_strlen(exponentStr));
-  char* resultPtr = result;
-  free(result);
+  free(exponentStr);
+
+  while (*exponentStr) *result++ = *exponentStr++;
+  *result = '\0';
+
+  free(resultPtr);
   return resultPtr;
 }
-
-

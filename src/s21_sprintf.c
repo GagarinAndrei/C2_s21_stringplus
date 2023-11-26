@@ -96,7 +96,7 @@ int main() {
     int val2 = 255;
     int val3 = 3231;
     int val4 = 6;
-    double val5 = 4.0;
+    double val5 = 10.0;
     unsigned int uVal = 1808867574;
     char ch = 'Q';
     int valN1 = 0;
@@ -365,17 +365,28 @@ char* eSpecifierHandler(char* str, Arguments_s* arguments, va_list factor) {
 
   char* fractionStr = doubleInChar(fraction);
   printf("fractionStr - %s\n", fractionStr);
-  char* exponent = exponentOfE(arguments->specifiers.e);
-  printf("exponent - %s\n", exponent);
   
   char* eString = malloc(sizeof(char));
   int i = 0;
   while(*fractionStr) {
-    eString = realloc(eString, sizeof(char));
+    eString = realloc(eString, sizeof(char) * (i + 1));
     *(eString + i) = *fractionStr++;
     i++;
   }
-  printf("%s!!!\n", eString);
+  printf("eString - %s\n", eString);
+
+  char* exponent = exponentOfE(arguments->specifiers.e);
+  printf("exponent - %s\n", exponent);
+
+
+  while(*exponent) {
+    eString = realloc(eString, sizeof(char) * (i + 1));
+    *(eString + i) = *exponent++;
+    i++;
+  }
+  *(eString + i) = '\0';
+
+  printf("eString - %s\n", eString);
 
   if(arguments->specifiers.E) {
     eString = s21_to_upper(eString); 
@@ -388,7 +399,7 @@ char* eSpecifierHandler(char* str, Arguments_s* arguments, va_list factor) {
   }
 
   str = printFormatWithSpaces(str, arguments, eString); 
-  free(eString);
+  // free(eString);
 }
 
 const char* flagsHandler(const char* ch, Arguments_s* arguments) {
