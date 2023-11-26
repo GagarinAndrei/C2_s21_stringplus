@@ -1,6 +1,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <errno.h>
 #include <string.h> // DELETE HIM
 
 #include "lib_files/s21_string.h"
@@ -86,12 +87,12 @@ char* octaIntInChar(int number);
 char* hexaIntInChar(int number);
 
 int main() {
-    char str1[1000];
-    char str2[1000];
+    char str1[10000];
+    char str2[10000];
     char strTest[] = "Test";
     char strTest2[] = "StringS!";
     // char *str3 = "%d %s free %.p %n %X %s % d %s %d %.10c %.13s %u %%TFR %20.4f ";
-    char *str3 = "&%#E&";
+    char *str3 = "&%E&";
     unsigned int val1 = 32767 * 4096 * 16 + 65535;
     int val2 = 255;
     int val3 = 3231;
@@ -111,6 +112,9 @@ int main() {
 
     printf("%s$\n", str1);
     printf("%s$\n", str2);
+    // printf("%d$\n", 9 % 10);
+
+    // printf("double -- %s$\n", doubleInChar(9.0));
     // printf("%f$\n", valN1);
     // printf("%d$\n", valN2);
 
@@ -360,24 +364,24 @@ char* eSpecifierHandler(char* str, Arguments_s* arguments, va_list factor) {
     arguments->specifiers.e = va_arg(factor, double);
   }
 
-  double fraction = fractionOfE(arguments->specifiers.e);
-  printf("fraction - %f\n", fraction);
+  double specE = arguments->specifiers.e;
+  double fraction = fractionOfE(specE);
 
   char* fractionStr = doubleInChar(fraction);
-  printf("fractionStr - %s\n", fractionStr);
   
   char* eString = malloc(sizeof(char));
+  if(eString == S21_NULL) {
+    printError(errno);
+    exit(1);
+  }
   int i = 0;
   while(*fractionStr) {
     eString = realloc(eString, sizeof(char) * (i + 1));
     *(eString + i) = *fractionStr++;
     i++;
   }
-  printf("eString - %s\n", eString);
 
   char* exponent = exponentOfE(arguments->specifiers.e);
-  printf("exponent - %s\n", exponent);
-
 
   while(*exponent) {
     eString = realloc(eString, sizeof(char) * (i + 1));
@@ -386,7 +390,7 @@ char* eSpecifierHandler(char* str, Arguments_s* arguments, va_list factor) {
   }
   *(eString + i) = '\0';
 
-  printf("eString - %s\n", eString);
+  free(eString);
 
   if(arguments->specifiers.E) {
     eString = s21_to_upper(eString); 
@@ -399,7 +403,7 @@ char* eSpecifierHandler(char* str, Arguments_s* arguments, va_list factor) {
   }
 
   str = printFormatWithSpaces(str, arguments, eString); 
-  // free(eString);
+  return str;
 }
 
 const char* flagsHandler(const char* ch, Arguments_s* arguments) {

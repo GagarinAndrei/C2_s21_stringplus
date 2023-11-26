@@ -91,7 +91,7 @@ char* doubleInChar(double number) {
   afterComma += 0.0000000005;
   afterComma *= 1000000000;
 
-  while ((int)afterComma % 10 == 0) {
+  while ((int)afterComma % 10 == 0 && afterComma != 0) {
     afterComma /= 10;
   }
 
@@ -101,7 +101,6 @@ char* doubleInChar(double number) {
     result[i++] = *afterCommaString++;
     result = realloc(result, sizeof(char));
   }
-
 
   free(result);
   return ptr;
