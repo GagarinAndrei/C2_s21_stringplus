@@ -264,7 +264,7 @@ char *s21_strerror(int errnum) {
   char buffer[255] = {0};
   char *ptr = buffer;
   if (errnum < 0 || errnum > MAX_ERRORS_COUNT - 1)
-    sprintf(buffer, "%s%d", UNKNOWN_ERROR, errnum);
+    s21_sprintf(buffer, "%s%d", UNKNOWN_ERROR, errnum);
   return (errnum < 0 || errnum > MAX_ERRORS_COUNT - 1)
              ? ptr
              : errors[errnum].errorMessage;
