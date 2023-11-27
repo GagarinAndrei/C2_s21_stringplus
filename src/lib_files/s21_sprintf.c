@@ -90,41 +90,51 @@ const char* lengthHandle(const char* ch, Arguments_s* arguments);
 char* octaIntInChar(int number);
 char* hexaIntInChar(int number);
 
-int main() {
-  char str1[10000];
-  char str2[10000];
-  char strTest[] = "Test";
-  char strTest2[] = "StringS!";
-  // char* str3 = "%d %s free %.p %n %X %s %d %s %d %.10c %.13s %u %%TFR %20.4f ";
-  char *str3 = "&%E&"; 
-  unsigned int val1 = 32767 * 4096 * 16 + 65535;
-  int val2 = 255;
-  int val3 = 3231;
-  int val4 = 6;
-  double val5 = 10.0;
-  unsigned int uVal = 1808867574;
-  char ch = 'Q';
-  int valN1 = 0;
-  int valN2 = 0;
+// int main() {
+//   char str1[10000];
+//   char str2[10000];
+//   char strTest[] = "Test";
+//   char strTest2[] = "StringS!";
+//   // char* str3 = "%d %s free %.p %n %X %s %d %s %d %.10c %.13s %u %%TFR
+//   %20.4f ";
+//   // char *str3 = "&%E&";
+//   // unsigned int val1 = 32767 * 4096 * 16 + 65535;
+//   // int val2 = 255;
+//   // int val3 = 3231;
+//   // int val4 = 6;
+//   // double val5 = 10.0;
+//   // unsigned int uVal = 1808867574;
+//   // char ch = 'Q';
+//   // int valN1 = 0;
+//   // int valN2 = 0;
+//   char *str3 = "%c Test %c Test %c Test %c Test %c";
+//   int a = 9;
+//   int b = 10;
+//   int c = 17;
+//   int d = 66;
+//   int e = 124;
 
-  sprintf(str1, str3, val5);
-  s21_sprintf(str2, str3, val5);
-  // sprintf(str1, str3, val1, strTest, &ch, &valN1, val2, strTest2, val3,
-  //         strTest2, val4, ch, strTest, uVal, val5);
-  // s21_sprintf(str2, str3, val1, strTest, &ch, &valN2, val2, strTest2, val3,
-  //             strTest2, val4, ch, strTest, uVal, val5);
-  // printf("%f!!!!\n", fractionOfE(val5));
+//   sprintf(str1, str3, a, b, c, d, e);
+//   s21_sprintf(str2, str3, a, b, c, d, e);
+//   // sprintf(str1, str3, val1, strTest, &ch, &valN1, val2, strTest2, val3,
+//   //         strTest2, val4, ch, strTest, uVal, val5);
+//   // s21_sprintf(str2, str3, val1, strTest, &ch, &valN2, val2, strTest2,
+//   val3,
+//   //             strTest2, val4, ch, strTest, uVal, val5);
+//   // printf("%f!!!!\n", fractionOfE(val5));
 
-  printf("%s$\n", str1);
-  printf("%s$\n", str2);
-  // printf("%d$\n", 9 % 10);
+//   printf("%s$\n", str1);
+//   printf("%s$\n", str2);
 
-  // printf("double -- %s$\n", doubleInChar(9.0));
-  // printf("%f$\n", valN1);
-  // printf("%d$\n", valN2);
+//   // printf("strcmp =%d", strcmp(str1, str2))
+//   // printf("%d$\n", 9 % 10);
 
-  return 0;
-}
+//   // printf("double -- %s$\n", doubleInChar(9.0));
+//   // printf("%f$\n", valN1);
+//   // printf("%d$\n", valN2);
+
+//   return 0;
+// }
 
 int s21_sprintf(char* str, const char* format, ...) {
   Arguments_s arguments = {0};
@@ -137,7 +147,7 @@ int s21_sprintf(char* str, const char* format, ...) {
 
   va_end(factor);
 
-  return 0;
+  return s21_strlen(startStr);
 }
 
 void formatStringHandler(char* str, const char* format, Arguments_s* arguments,

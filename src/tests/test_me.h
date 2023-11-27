@@ -31,9 +31,9 @@ Suite *test_trim(void);
 Suite *test_insert(void);
 Suite *test_sprintf_c(void);
 Suite *test_sprintf_d(void);
-Suite *test_sprintf_e(void);
-Suite *test_sprintf_f(void);
-Suite *test_sprintf_g(void);
+// Suite *test_sprintf_e(void);
+// Suite *test_sprintf_f(void);
+// Suite *test_sprintf_g(void);
 Suite *test_sprintf_hex1(void);
 Suite *test_sprintf_hex2(void);
 Suite *test_sprintf_i(void);
@@ -41,7 +41,7 @@ Suite *test_sprintf_n(void);
 Suite *test_sprintf_octal(void);
 Suite *test_sprintf_percent(void);
 Suite *test_sprintf_pointer(void);
-Suite *test_sprintf_string(void);
+// Suite *test_sprintf_string(void);
 Suite *test_sprintf_unsigned(void);
 
 

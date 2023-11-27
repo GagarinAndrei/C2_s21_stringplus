@@ -175,35 +175,34 @@ char* hexaIntInChar(int number) {
   return conversionDexInHexOrOcta(number, numeralSystem);
 }
 
-char* reverseStr(char *str){
-    if (str == S21_NULL || *str == '\0') return S21_NULL;
-    int end_str = s21_strlen(str);
-    s21_size_t i = 0;
-    char* result = (char*)malloc(sizeof(char));
-    while (i < s21_strlen(str)){
-        result[i] =  str[end_str - 1];
-        i++; 
-        end_str--;
-    }
-    result[i] = '\0';
-    free(result);
-    return result;
+char* reverseStr(char* str) {
+  if (str == S21_NULL || *str == '\0') return S21_NULL;
+  int end_str = s21_strlen(str);
+  s21_size_t i = 0;
+  char* result = (char*)malloc(sizeof(char));
+  while (i < s21_strlen(str)) {
+    result[i] = str[end_str - 1];
+    i++;
+    end_str--;
+  }
+  result[i] = '\0';
+  free(result);
+  return result;
 }
 
 // Преобразование адреса в строку
-char *ptrInChar(int *address) {
-  char *str = calloc(14, sizeof(char));
-  char *ptr = str;
-  
-  s21_size_t *addressPtr = (s21_size_t*)address;
+char* ptrInChar(int* address) {
+  char* str = calloc(14, sizeof(char));
+  char* ptr = str;
+
+  s21_size_t* addressPtr = (s21_size_t*)address;
   if (addressPtr == NULL) {
     *str++ = '0';
   } else {
-    while (addressPtr != 0 ) {
+    while (addressPtr != 0) {
       s21_size_t lastSymbol = ((s21_size_t)addressPtr) % 16;
-      lastSymbol < 10 ? (*str = 48 + lastSymbol)
-                       : (*str = 87 + lastSymbol);
-      addressPtr = ((s21_size_t *)(((s21_size_t)addressPtr) >> 4));
+      lastSymbol < 10 ? (*str = 48 + lastSymbol) : (*str = 87 + lastSymbol);
+      addressPtr = ((s21_size_t*)(((s21_size_t)addressPtr) >> 4));
       *str = *(str + 1);
     }
   }

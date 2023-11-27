@@ -28,5 +28,5 @@ void *s21_trim(const char *src, const char *trim_chars) {
   result[end_str - start_str + 1] = '\0';
   free(result);
 
-  return (char*)result;
+  return (char *)result;
 }
