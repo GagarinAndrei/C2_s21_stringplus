@@ -76,6 +76,9 @@ int digitsInIntCounter(int n) {
 char* doubleInChar(double number) {
   double beforeComma, afterComma;
   afterComma = modf(number, &beforeComma);
+  if(afterComma < 0) {
+    afterComma *= -1;
+  }
   char* result = malloc(sizeof(char));
   char* ptr = result;
   char* beforeCommaString = intInChar(beforeComma);
@@ -287,4 +290,18 @@ char* exponentOfE(double number) {
 
   // free(resultPtr);
   return resultPtr;
+}
+
+double roundTo(double number, short precision) { 
+  double div = 1.0;
+  if(precision < 0) {
+    while(precision++) {
+      div /= 10.0;
+    }
+  } else { 
+    while(precision--) {
+      div *= 10.0;
+    }
+  }
+  return floor(number * div + 0.5) / div;
 }

@@ -24,5 +24,6 @@ double fractionOfE(double number);
 int exponent(double number);
 char* exponentOfE(double number);
 void printError(int error);
+double roundTo(double Number, short Precision);
 
 #endif

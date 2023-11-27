@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>  // DELETE HIM
+#include <math.h>
 
 #include "s21_string.h"
 #include "s21_utils.h"
@@ -91,58 +92,16 @@ char* octaIntInChar(int number);
 char* hexaIntInChar(int number);
 
 int main() {
-<<<<<<< HEAD:src/s21_sprintf.c
-    char str1[10000];
-    char str2[10000];
-    char strTest[] = "Test";
-    char strTest2[] = "StringS!";
-    // char *str3 = "%d %s free %.p %n %X %s % d %s %d %.10c %.13s %u %%TFR %20.4f ";
-    char *str3 = "&%#8.0f&";
-    unsigned int val1 = 32767 * 4096 * 16 + 65535;
-    int val2 = 255;
-    int val3 = 3231;
-    int val4 = 6;
-    double val5 = 9.1;
-    unsigned int uVal = 1808867574;
-    char ch = 'Q';
-    int valN1 = 0;
-    int valN2 = 0;
-     
-     sprintf(str1, str3,  val5);
-     s21_sprintf(str2, str3, val5 );
-    // sprintf(str1, str3, val1, strTest, &ch, &valN1, val2, strTest2, val3, strTest2, val4, ch, strTest, uVal, val5);
-    // s21_sprintf(str2, str3, val1, strTest, &ch, &valN2, val2, strTest2, val3, strTest2, val4, ch, strTest, uVal, val5);
-    // printf("%f!!!!\n", fractionOfE(val5));
-
-
-    printf("%s$\n", str1);
-    printf("%s$\n", str2);
-    // printf("%d$\n", 9 % 10);
-
-    // printf("double -- %s$\n", doubleInChar(9.0));
-    // printf("%f$\n", valN1);
-    // printf("%d$\n", valN2);
-
-    return 0;
-=======
   char str1[10000];
   char str2[10000];
-  char strTest[] = "Test";
-  char strTest2[] = "StringS!";
+  // char strTest[] = "Test";
+  // char strTest2[] = "StringS!";
   // char* str3 = "%d %s free %.p %n %X %s %d %s %d %.10c %.13s %u %%TFR %20.4f ";
-  char *str3 = "&%E&"; 
-  unsigned int val1 = 32767 * 4096 * 16 + 65535;
-  int val2 = 255;
-  int val3 = 3231;
-  int val4 = 6;
-  double val5 = 10.0;
-  unsigned int uVal = 1808867574;
-  char ch = 'Q';
-  int valN1 = 0;
-  int valN2 = 0;
+  char *str3 = "%f TEST %.f TEST %4f TEST %4.f TEST %5.10f!";
+  double num = 76.756589367;
 
-  sprintf(str1, str3, val5);
-  s21_sprintf(str2, str3, val5);
+  sprintf(str1, str3, num, num, num, num, num);
+  s21_sprintf(str2, str3, num, num, num, num, num);
   // sprintf(str1, str3, val1, strTest, &ch, &valN1, val2, strTest2, val3,
   //         strTest2, val4, ch, strTest, uVal, val5);
   // s21_sprintf(str2, str3, val1, strTest, &ch, &valN2, val2, strTest2, val3,
@@ -151,14 +110,8 @@ int main() {
 
   printf("%s$\n", str1);
   printf("%s$\n", str2);
-  // printf("%d$\n", 9 % 10);
-
-  // printf("double -- %s$\n", doubleInChar(9.0));
-  // printf("%f$\n", valN1);
-  // printf("%d$\n", valN2);
 
   return 0;
->>>>>>> dawnkali_test:src/lib_files/s21_sprintf.c
 }
 
 int s21_sprintf(char* str, const char* format, ...) {
@@ -220,6 +173,8 @@ char* specifiersHandler(char* str, const char* ch, Arguments_s* arguments,
       str = xSpecifierHandler(str, arguments, factor);
       break;
     case 'x':
+      //Можно попробовать такой вариант вместо дублирования  
+      // if(*ch == 'X') arguments->specifiers.X = 1;
       str = xSpecifierHandler(str, arguments, factor);
       break;
     case 'n':
@@ -233,6 +188,8 @@ char* specifiersHandler(char* str, const char* ch, Arguments_s* arguments,
       str = eSpecifierHandler(str, arguments, factor);
       break;
     case 'e':
+      //Можно попробовать такой вариант вместо дублирования  
+      // if(*ch == 'E') arguments->specifiers.E = 1;
       str = eSpecifierHandler(str, arguments, factor);
       break;
     case '%':
@@ -280,11 +237,8 @@ char* fSpecifierHandler(char* str, Arguments_s* arguments, va_list factor) {
   } else {
     arguments->specifiers.f = va_arg(factor, double);
   }
+  arguments->specifiers.f = roundTo(arguments->specifiers.f, arguments->accuracy.number);
   char* fString = doubleInChar(arguments->specifiers.f);
-<<<<<<< HEAD:src/s21_sprintf.c
-=======
-  // int spaces = spacesCounter(arguments, fString);  // Нужна ли эта строка????
->>>>>>> dawnkali_test:src/lib_files/s21_sprintf.c
 
   if (arguments->flags.plus && arguments->specifiers.f > 0) {
     *str++ = '+';
@@ -414,8 +368,12 @@ char* eSpecifierHandler(char* str, Arguments_s* arguments, va_list factor) {
   } else {
     arguments->specifiers.e = va_arg(factor, double);
   }
-
-  double fraction = fractionOfE(arguments->specifiers.e);
+  double fraction;
+  if(arguments->accuracy.isNull) {
+    fraction = floor(fractionOfE(arguments->specifiers.e));
+  } else {
+    fraction = fractionOfE(arguments->specifiers.e);
+  }
   char* fractionStr = doubleInChar(fraction);
 
   char* eString = malloc(sizeof(char));
@@ -425,7 +383,7 @@ char* eSpecifierHandler(char* str, Arguments_s* arguments, va_list factor) {
   }
   int i = 0;
   while (*fractionStr) {
-    eString = realloc(eString, sizeof(char) * (i + 1));
+    eString = realloc(eString, sizeof(char) * (i + 3));
     *(eString + i) = *fractionStr++;
     i++;
   }
@@ -433,7 +391,7 @@ char* eSpecifierHandler(char* str, Arguments_s* arguments, va_list factor) {
   char* exponent = exponentOfE(arguments->specifiers.e);
 
   while (*exponent) {
-    eString = realloc(eString, sizeof(char) * (i + 1));
+    eString = realloc(eString, sizeof(char) * (i + 3) * 2);
     *(eString + i) = *exponent++;
     i++;
   }
@@ -516,7 +474,7 @@ const char* widthHandle(const char* ch, Arguments_s* arguments,
 int spacesCounter(Arguments_s* arguments, const char* string) {
   int spaces = 0;
   const char* ptr = string;
-  if (arguments->width.number) {
+  if (arguments->width.number && !arguments->flags.null) {
     spaces = arguments->width.number - s21_strlen(ptr);
   }
 
@@ -540,9 +498,13 @@ int nullsCounter(Arguments_s* arguments, const char* string) {
     nulls = arguments->accuracy.number - s21_strlen(string);
   }
 
-  if (arguments->specifiers.f || arguments->specifiers.e) {
-    nulls =
-        arguments->accuracy.number - (s21_strlen(s21_strchr(string, '.')) - 1);
+  if(arguments->specifiers.f || arguments->specifiers.e) {
+    if (!arguments->width.number) {
+      nulls =
+          arguments->accuracy.number - (s21_strlen(s21_strchr(string, '.')) - 1);
+    } else {
+      nulls = arguments->width.number - s21_strlen(string) + 3;
+    }
   }
 
   return nulls > 0 ? nulls : 0;
@@ -558,6 +520,8 @@ char* printFormatWithSpaces(char* str, Arguments_s* arguments,
       arguments->accuracy.number /* && !arguments->specifiers.d */) {
     str = printSpaces(str, spaces);
     if (!arguments->specifiers.f && !arguments->specifiers.e) {
+      str = printNulls(str, arguments, nulls);
+    } else if ((arguments->specifiers.f || arguments->specifiers.e) && arguments->width.number) {
       str = printNulls(str, arguments, nulls);
     }
   }
@@ -584,8 +548,12 @@ char* printFormatWithSpaces(char* str, Arguments_s* arguments,
       *str++ = *string++;
     }
   }
-  // Строку печатаем полностью или если задана точность, то определенное
-  // количество символов
+  if(arguments->specifiers.f && arguments->accuracy.isNull) {
+    while (*string && *string != '.') {
+      *str++ = *string++;
+    }
+  }
+  // Строку печатаем полностью или если задана точность, то определенное количество символов
   if (arguments->specifiers.s) {
     while (*string && arguments->accuracy.number &&
            !arguments->accuracy.isNull) {
@@ -593,11 +561,9 @@ char* printFormatWithSpaces(char* str, Arguments_s* arguments,
       arguments->accuracy.number--;
     }
   }
-
   if (arguments->specifiers.e) {
     str = printSpecificatorE(str, arguments, string);
   }
-
   if (arguments->width.number && arguments->flags.minus) {
     str = printSpaces(str, spaces);
   }
@@ -608,25 +574,30 @@ char* printFormatWithSpaces(char* str, Arguments_s* arguments,
   return str;
 }
 
-char* printSpecificatorE(char* str, Arguments_s* arguments,
-                         const char* string) {
+char* printSpecificatorE(char* str, Arguments_s* arguments, const char* string) {
   int isAfterComma = 0;
-<<<<<<< HEAD:src/s21_sprintf.c
-  while(*string && arguments->accuracy.number >= 0 && !(*string == 'e' || *string == 'E')) {
-=======
-  while (*string && arguments->accuracy.number > 0 &&
+
+  while (*string && (arguments->accuracy.number > 0 || arguments->accuracy.isNull) &&
          !(*string == 'e' || *string == 'E')) {
->>>>>>> dawnkali_test:src/lib_files/s21_sprintf.c
     if (isAfterComma == 1) {
       arguments->accuracy.number--;
     }
+    
     if (*string == '.') {
       isAfterComma = 1;
       if(arguments->flags.sharp && arguments->accuracy.isNull) {
         arguments->accuracy.number = -1;
+        arguments->accuracy.isNull = 0;
       }
     }
-    *str++ = *string++;
+    if(!arguments->flags.sharp && arguments->accuracy.isNull && *string == '.') {
+      string = string + 1;
+      arguments->accuracy.number = -1;
+      arguments->accuracy.isNull = 0;
+    }else {
+      *str++ = *string++;
+    }
+    
   }
   str = printNulls(str, arguments, arguments->accuracy.number);
 
