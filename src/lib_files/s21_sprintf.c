@@ -9,11 +9,11 @@
 #include "s21_utils.h"
 
 typedef struct {
-  int d;
+  int64_t d;
   int o;
   int x;
   int X;
-  double f;
+  long double f;
   char c;
   char* s;
   unsigned int u;
@@ -52,6 +52,7 @@ typedef struct {
   Width_s width;
   Accuracy_s accuracy;
   Length_s length;
+  int isNegative;
 } Arguments_s;
 
 int s21_sprintf(char* str, const char* format, ...);
@@ -72,36 +73,37 @@ void nSpecifierHandler(char* str, Arguments_s* arguments, va_list factor,
 char* pSpecifierHandler(char* str, Arguments_s* arguments, va_list factor);
 char* eSpecifierHandler(char* str, Arguments_s* arguments, va_list factor);
 
-const char* flagsHandler(const char* ch, Arguments_s* arguments);
 void resetArguments(Arguments_s* arguments);
 
-const char* widthHandle(const char* ch, Arguments_s* arguments, va_list factor);
-int spacesCounter(Arguments_s* arguments, const char* string);
-char* printSpaces(char* str, int spaces);
-char* printNulls(char* str, Arguments_s* arguments, int nulls);
 char* printFormatWithSpaces(char* str, Arguments_s* arguments,
                             const char* string);
 
+char *printSpecificatorD(char* str, Arguments_s* arguments, const char* string);
+char *printSpecificatorF(char* str, Arguments_s* arguments, const char* string);
 char* printSpecificatorE(char* str, Arguments_s* arguments, const char* string);
 
+const char* flagsHandler(const char* ch, Arguments_s* arguments);
+const char* widthHandle(const char* ch, Arguments_s* arguments, va_list factor);
 const char* accuracyHandle(const char* ch, Arguments_s* arguments,
                            va_list factor);
 const char* lengthHandle(const char* ch, Arguments_s* arguments);
 
-char* octaIntInChar(int number);
-char* hexaIntInChar(int number);
+int spacesCounter(Arguments_s* arguments, const char* string);
+int nullsCounter(Arguments_s* arguments, const char* string);
+
+char* printSpaces(char* str, int spaces);
+char* printNulls(char* str, Arguments_s* arguments, int nulls);
 
 int main() {
   char str1[10000];
   char str2[10000];
-  // char strTest[] = "Test";
-  // char strTest2[] = "StringS!";
-  // char* str3 = "%d %s free %.p %n %X %s %d %s %d %.10c %.13s %u %%TFR %20.4f ";
-  char *str3 = "%f TEST %.f TEST %4f TEST %4.f TEST %5.10f!";
-  double num = 76.756589367;
+  
+  
+  char *str3 = "test: %15.1f\ntest: %16.2f\ntest: %18.3f!";
+  double num = -7648938790.756189;
 
-  sprintf(str1, str3, num, num, num, num, num);
-  s21_sprintf(str2, str3, num, num, num, num, num);
+ sprintf(str1, str3, num, num, num);
+                   s21_sprintf(str2, str3, num, num, num);
   // sprintf(str1, str3, val1, strTest, &ch, &valN1, val2, strTest2, val3,
   //         strTest2, val4, ch, strTest, uVal, val5);
   // s21_sprintf(str2, str3, val1, strTest, &ch, &valN2, val2, strTest2, val3,
@@ -125,7 +127,7 @@ int s21_sprintf(char* str, const char* format, ...) {
 
   va_end(factor);
 
-  return 0;
+  return s21_strlen(startStr);
 }
 
 void formatStringHandler(char* str, const char* format, Arguments_s* arguments,
@@ -210,19 +212,19 @@ char* diSpecifierHandler(char* str, Arguments_s* arguments, va_list factor) {
   if (arguments->length.h) {
     arguments->specifiers.d = (short)va_arg(factor, int);
   } else if (arguments->length.l) {
-    arguments->specifiers.d = (long)va_arg(factor, int);
+    arguments->specifiers.d = (long)va_arg(factor, long int);
   } else {
     arguments->specifiers.d = va_arg(factor, int);
   }
+
+  if(arguments->specifiers.d < 0) {
+    arguments->isNegative = 1;
+    arguments->specifiers.d *= -1;
+  }
   char* dString = intInChar(arguments->specifiers.d);
 
-  if (arguments->flags.plus && arguments->specifiers.d > 0) {
-    *str++ = '+';
-  }
-  if (arguments->flags.space && arguments->specifiers.d > 0) {
-    *str++ = ' ';
-  }
-  str = printFormatWithSpaces(str, arguments, dString);
+  str = printSpecificatorD(str, arguments, dString);
+  free(dString); 
 
   return str;
 }
@@ -233,21 +235,19 @@ char* fSpecifierHandler(char* str, Arguments_s* arguments, va_list factor) {
     arguments->accuracy.number = 6;
   }
   if (arguments->length.L) {
-    arguments->specifiers.f = (long double)va_arg(factor, double);
+    arguments->specifiers.f = (long double)va_arg(factor, long double);
   } else {
     arguments->specifiers.f = va_arg(factor, double);
+  }
+  if(arguments->specifiers.f < 0) {
+    arguments->isNegative = 1;
+    arguments->specifiers.f *= -1;
   }
   arguments->specifiers.f = roundTo(arguments->specifiers.f, arguments->accuracy.number);
   char* fString = doubleInChar(arguments->specifiers.f);
 
-  if (arguments->flags.plus && arguments->specifiers.f > 0) {
-    *str++ = '+';
-  }
-  if (arguments->flags.space && arguments->specifiers.f > 0) {
-    *str++ = ' ';
-  }
-
-  str = printFormatWithSpaces(str, arguments, fString);
+  str = printSpecificatorF(str, arguments, fString);
+  free(fString);
 
   return str;
 }
@@ -288,6 +288,8 @@ char* uSpecifierHandler(char* str, Arguments_s* arguments, va_list factor) {
   char* uString = intInChar(arguments->specifiers.u);
   str = printFormatWithSpaces(str, arguments, uString);
 
+  free(uString);
+
   return str;
 }
 
@@ -314,6 +316,7 @@ char* oSpecifierHandler(char* str, Arguments_s* arguments, va_list factor) {
 
   str = printFormatWithSpaces(str, arguments, oString);
 
+  free(oString);
   return str;
 }
 
@@ -338,6 +341,7 @@ char* xSpecifierHandler(char* str, Arguments_s* arguments, va_list factor) {
 
   str = printFormatWithSpaces(str, arguments, xString);
 
+  free(xString);
   return str;
 }
 
@@ -388,6 +392,7 @@ char* eSpecifierHandler(char* str, Arguments_s* arguments, va_list factor) {
     i++;
   }
 
+
   char* exponent = exponentOfE(arguments->specifiers.e);
 
   while (*exponent) {
@@ -397,7 +402,7 @@ char* eSpecifierHandler(char* str, Arguments_s* arguments, va_list factor) {
   }
   *(eString + i) = '\0';
 
-  free(eString);
+  free(fractionStr);
 
   if (arguments->specifiers.E) {
     eString = s21_to_upper(eString);
@@ -410,11 +415,14 @@ char* eSpecifierHandler(char* str, Arguments_s* arguments, va_list factor) {
   }
 
   str = printFormatWithSpaces(str, arguments, eString);
+  
+  free(eString);
+
   return str;
 }
 
 const char* flagsHandler(const char* ch, Arguments_s* arguments) {
-  ch = ch + 1;  //*ch++;
+  ch = ch + 1;
   while (*ch == '-' || *ch == '+' || *ch == ' ' || *ch == '0' || *ch == '#') {
     switch (*ch) {
       case '-':
@@ -471,44 +479,7 @@ const char* widthHandle(const char* ch, Arguments_s* arguments,
   return ch;
 }
 
-int spacesCounter(Arguments_s* arguments, const char* string) {
-  int spaces = 0;
-  const char* ptr = string;
-  if (arguments->width.number && !arguments->flags.null) {
-    spaces = arguments->width.number - s21_strlen(ptr);
-  }
 
-  if (arguments->flags.sharp &&
-      (arguments->specifiers.o || arguments->specifiers.x)) {
-    spaces--;
-    if (arguments->specifiers.x) {
-      spaces--;
-    }
-  }
-
-  return spaces;
-}
-
-int nullsCounter(Arguments_s* arguments, const char* string) {
-  int nulls = 0;
-  if (arguments->width.number && !arguments->flags.minus &&
-      arguments->flags.null && !arguments->accuracy.number) {
-    nulls = arguments->width.number - s21_strlen(string);
-  } else if (arguments->accuracy.number) {
-    nulls = arguments->accuracy.number - s21_strlen(string);
-  }
-
-  if(arguments->specifiers.f || arguments->specifiers.e) {
-    if (!arguments->width.number) {
-      nulls =
-          arguments->accuracy.number - (s21_strlen(s21_strchr(string, '.')) - 1);
-    } else {
-      nulls = arguments->width.number - s21_strlen(string) + 3;
-    }
-  }
-
-  return nulls > 0 ? nulls : 0;
-}
 
 char* printFormatWithSpaces(char* str, Arguments_s* arguments,
                             const char* string) {
@@ -570,6 +541,115 @@ char* printFormatWithSpaces(char* str, Arguments_s* arguments,
   if (arguments->specifiers.f) {
     str = printNulls(str, arguments, nulls);
   }
+
+  return str;
+}
+
+char *printSpecificatorD(char* str, Arguments_s* arguments, const char* string) {
+  int spaces = spacesCounter(arguments, string);
+  if (arguments->accuracy.isNull && arguments->specifiers.d == 0) {
+    spaces++;
+  }
+  int nulls = nullsCounter(arguments, string);
+  spaces = spaces - nulls;
+
+  if (arguments->flags.plus && arguments->specifiers.d >= 0) {
+    *str++ = '+';
+  }
+  if (arguments->flags.space && arguments->specifiers.d >= 0) {
+    *str++ = ' ';
+  }
+
+  if(!arguments->flags.minus) {
+    if (arguments->width.number || arguments->accuracy.number) {
+      str = printSpaces(str, spaces);
+    }
+  }
+
+  if(arguments->isNegative) {
+    *str++ = '-';
+  }
+
+  if ((arguments->width.number && !arguments->flags.minus) || arguments->accuracy.number) {    
+    str = printNulls(str, arguments, nulls);
+  }
+
+  // Проверяем если точность != 0 и значение != 0
+  if (!(arguments->accuracy.isNull && arguments->specifiers.d == 0)) {
+    // то добавляем в строку
+    int afterComma = 0;
+    while (*string && arguments->accuracy.number > 1) {
+      *str++ = *string++;
+      if(afterComma) {
+        arguments->accuracy.number--;
+      }
+      if(*string == '.') {
+        afterComma = 1;
+      }
+    }
+  }
+
+  if (arguments->width.number && arguments->flags.minus) {
+    str = printSpaces(str, spaces);
+  }
+
+  return str;
+}
+
+char *printSpecificatorF(char* str, Arguments_s* arguments, const char* string) {
+  int isAfterComma = 0;
+  int spaces = spacesCounter(arguments, string);
+  int nulls = nullsCounter(arguments, string);
+  spaces = spaces - nulls;
+
+  if (arguments->flags.plus && arguments->specifiers.f > 0) {
+    *str++ = '+';
+  }
+  if (arguments->flags.space && arguments->specifiers.f > 0) {
+    *str++ = ' ';
+  }
+
+  if(!arguments->flags.minus) {
+    if (arguments->width.number && arguments->accuracy.number) {
+      str = printSpaces(str, spaces);
+    }
+  }
+
+  if(arguments->isNegative) {
+    *str++ = '-';
+  }
+
+  if (arguments->width.number && !arguments->accuracy.number) {
+    str = printNulls(str, arguments, nulls);
+  }
+
+  while (*string && (arguments->accuracy.number > 0 || arguments->accuracy.isNull)) {
+    if (isAfterComma == 1) {
+      arguments->accuracy.number--;
+    }
+    
+    if (*string == '.') {
+      isAfterComma = 1;
+      if(arguments->flags.sharp && arguments->accuracy.isNull) {
+        arguments->accuracy.number = -1;
+        arguments->accuracy.isNull = 0;
+      }
+    }
+    if(!arguments->flags.sharp && arguments->accuracy.isNull && *string == '.') {
+      string = string + 1;
+      arguments->accuracy.number = -1;
+      arguments->accuracy.isNull = 0;
+    } else {
+      *str++ = *string++;
+    }
+    
+  }
+  
+  if (arguments->width.number && arguments->flags.minus) {
+    str = printSpaces(str, spaces);
+  }
+  
+  str = printNulls(str, arguments, nulls);
 
   return str;
 }
@@ -661,6 +741,61 @@ const char* lengthHandle(const char* ch, Arguments_s* arguments) {
   }
 
   return ch;
+}
+
+int spacesCounter(Arguments_s* arguments, const char* string) {
+  int spaces = 0;
+  const char* ptr = string;
+  if (arguments->width.number && !arguments->flags.null) {
+    spaces = arguments->width.number - s21_strlen(ptr);
+  }
+
+  if (arguments->flags.sharp &&
+      (arguments->specifiers.o || arguments->specifiers.x)) {
+    spaces--;
+    if (arguments->specifiers.x) {
+      spaces--;
+    }
+  }
+
+  if(arguments->isNegative) {
+    spaces--;
+  } else {
+    if(arguments->flags.space) {
+      spaces--;
+    }
+  }
+
+  if(arguments->specifiers.f) {
+    if(arguments->accuracy.number < 6) {
+      spaces = spaces + 5 - arguments->accuracy.number ;
+    }
+    if(arguments->accuracy.isNull && !arguments->flags.sharp) {
+      spaces++; //прибавляем, так как не печатается точка 
+    }
+  }
+
+  return spaces;
+}
+
+int nullsCounter(Arguments_s* arguments, const char* string) {
+  int nulls = 0;
+  if (arguments->width.number && !arguments->flags.minus &&
+      arguments->flags.null && !arguments->accuracy.number) {
+    nulls = arguments->width.number - s21_strlen(string);
+  } else if (arguments->accuracy.number) {
+    nulls = arguments->accuracy.number - s21_strlen(string);
+  }
+
+  if(arguments->specifiers.f || arguments->specifiers.e) {
+    nulls = arguments->accuracy.number - (s21_strlen(s21_strchr(string, '.')) - 1);
+  }
+
+  if(arguments->isNegative && !arguments->accuracy.number) {
+    nulls--;
+  }
+
+  return nulls > 0 ? nulls : 0;
 }
 
 char* printSpaces(char* str, int spaces) {
