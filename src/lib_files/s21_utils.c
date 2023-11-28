@@ -27,7 +27,7 @@ int formatCounter(const char* string) {
 }
 
 // Преобразует int в строку и возвращает указатель на нее
-char* intInChar(int number) {
+char* intInChar(int64_t number) {
   int isNegative = 0;
   if (number < 0) {
     isNegative = 1;
@@ -39,7 +39,6 @@ char* intInChar(int number) {
     printError(errno);
   }
 
-  char* ptr = result;
   int n = 0;
 
   if (isNegative) {
@@ -54,12 +53,12 @@ char* intInChar(int number) {
     result[0] = '-';
   }
   result[s21_strlen(result)] = '\0';
-  free(result);
-  return ptr;
+
+  return result;
 }
 
 // Возвращает количество цифр в целом числе
-int digitsInIntCounter(int n) {
+int digitsInIntCounter(int64_t n) {
   int i = 0;
   if (n / 10 == 0) {
     return 1;
@@ -73,12 +72,16 @@ int digitsInIntCounter(int n) {
 };
 
 // Преобразует double в строку и возвращает указатель на нее
-char* doubleInChar(double number) {
+char* doubleInChar(long double number) {
   double beforeComma, afterComma;
   afterComma = modf(number, &beforeComma);
+  if(afterComma < 0) {
+    afterComma *= -1;
+  }
   char* result = malloc(sizeof(char));
-  char* ptr = result;
+
   char* beforeCommaString = intInChar(beforeComma);
+  char* beforePtr = beforeCommaString;
   int i = 0;
 
   while (*beforeCommaString) {
@@ -96,14 +99,17 @@ char* doubleInChar(double number) {
   }
 
   char* afterCommaString = intInChar((int)afterComma);
+  char* afterPtr = afterCommaString;
 
   while (*afterCommaString) {
     result[i++] = *afterCommaString++;
     result = realloc(result, sizeof(char));
   }
 
-  free(result);
-  return ptr;
+  free(afterPtr);
+  free(beforePtr);
+
+  return result;
 }
 
 // Преобразование строки в число
@@ -279,11 +285,25 @@ char* exponentOfE(double number) {
   } else {
     exponentStr = intInChar(exponentNum);
   }
-  // free(exponentStr);
+  
 
   while (*exponentStr) *result++ = *exponentStr++;
   *result = '\0';
 
-  // free(resultPtr);
+  free(resultPtr);
   return resultPtr;
+}
+
+long double roundTo(long double number, short precision) { 
+  double div = 1.0;
+  if(precision < 0) {
+    while(precision++) {
+      div /= 10.0;
+    }
+  } else { 
+    while(precision--) {
+      div *= 10.0;
+    }
+  }
+  return floorl(number * div + 0.5) / div;
 }

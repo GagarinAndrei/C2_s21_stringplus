@@ -3,10 +3,10 @@
 
 int formatCounter(const char* string);
 
-int digitsInIntCounter(int n);
-char* intInChar(int number);
+int digitsInIntCounter(long long n);
+char* intInChar(long long number);
 
-char* doubleInChar(double number);
+char* doubleInChar(long double number);
 int numberAfterComma(double n);
 
 int strInInt(char ch);
@@ -24,5 +24,6 @@ double fractionOfE(double number);
 int exponent(double number);
 char* exponentOfE(double number);
 void printError(int error);
+long double roundTo(long double Number, short Precision);
 
 #endif

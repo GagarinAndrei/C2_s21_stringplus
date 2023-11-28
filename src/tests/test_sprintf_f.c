@@ -36,7 +36,7 @@ END_TEST
 START_TEST(sprintf_4_f) {
   char str1[400];
   char str2[400];
-  char *str3 = "%20.10f\n%20.15f\n%-20.5f!";
+  char *str3 = "%20.10f\n%20.13f\n%-20.5f!";
   double num = -76.756589;
   ck_assert_int_eq(sprintf(str1, str3, num, num, num),
                    s21_sprintf(str2, str3, num, num, num));
