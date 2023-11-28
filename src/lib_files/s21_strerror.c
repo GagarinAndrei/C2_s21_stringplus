@@ -1,9 +1,11 @@
 // #include <errno.h>
 #include "s21_string.h"
-#define UNKNOWN_ERROR "Unknown error:"
+#include <stdio.h>
+#define UNKNOWN_ERROR "Unknown error"
 
+char *s21_strerror(int errnum) {
 #ifdef __linux__
-char* errors[] = {"Success",
+char *errors[] = {"Success",
                   "Operation not permitted",
                   "No such file or directory",
                   "No such process",
@@ -140,7 +142,7 @@ char* errors[] = {"Success",
 #endif
 
 #ifdef __APPLE__
-char* errors[] = {"Undefined error: 0",
+char *errors[] = {"Undefined error: 0",
                   "Operation not permitted",
                   "No such file or directory",
                   "No such process",
@@ -249,11 +251,11 @@ char* errors[] = {"Undefined error: 0",
                   "Interface output queue is full"};
 
 #endif
-char* s21_strerror(int errnum) {
   char buffer[255] = {0};
-  if (errnum < 0 || errnum > (int)(s21_strlen(*errors) - 1))
-    s21_sprintf(buffer, "%s %d", UNKNOWN_ERROR, errnum);
-  return (errnum < 0 || errnum > (int)(s21_strlen(*errors) - 1))
-             ? buffer
+  char *bufferPtr = buffer;
+  // if (errnum < 0 || errnum > (int)(s21_strlen(*errors) - 1))
+  s21_sprintf(buffer, "%s %d", UNKNOWN_ERROR, errnum);
+  return (errnum < 0 || errnum > ((int)s21_strlen(*errors) - 1))
+             ? bufferPtr
              : errors[errnum];
 }

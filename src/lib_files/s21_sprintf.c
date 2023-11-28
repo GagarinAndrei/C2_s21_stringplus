@@ -1,6 +1,8 @@
 #include <errno.h>
 #include <stdarg.h>
+#include <stdint.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>  // DELETE HIM
 #include <math.h>
@@ -426,6 +428,7 @@ char* eSpecifierHandler(char* str, Arguments_s* arguments, va_list factor) {
   }
   *(eString + i) = '\0';
 
+  free (exponent);
   free(fractionStr);
 
   if (arguments->specifiers.E) {
