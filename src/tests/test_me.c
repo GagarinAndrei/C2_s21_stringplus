@@ -22,7 +22,7 @@ int main(void) {
                               test_insert(),
                               test_trim(),
                               // test_sprintf_c(),
-                              // test_sprintf_d(),
+                              test_sprintf_d(),
                               // test_sprintf_e(),
                               // // test_sprintf_f(),
                               // // test_sprintf_g(),
