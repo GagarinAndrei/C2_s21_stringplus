@@ -16,7 +16,7 @@ char* conversionDexInHexOrOcta(int number, int numeralSystem);
 char* octaIntInChar(int number);
 char* hexaIntInChar(int number);
 
-char* reverseStr(char *str);
+char* reverseStr(char* str);
 char* ptrInChar(int* ptr);
 
 char* exponentInStr(double number);
