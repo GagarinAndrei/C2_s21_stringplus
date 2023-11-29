@@ -2,9 +2,9 @@
 
 #include <errno.h>
 #include <math.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
 
 // #include <string.h> //dfkpgssgmbkfdgmboksmbombordbdrmbhokrsmnoknsrkbmdhm
 
@@ -156,7 +156,7 @@ char *conversionDexInHexOrOcta(int number, int numeralSystem) {
     if (tmpResult[i] > 9) {
       result[j] = (char)(tmpResult[i] + 87);
     } else {
-      result[j] = intInChar(tmpResult[i])[0];
+      result[j] = (char)(tmpResult[i] + 48);
     }
     j++;
     i--;
@@ -182,8 +182,7 @@ char *hexaIntInChar(int number) {
 }
 
 char *reverseStr(char *str) {
-  if (str == S21_NULL || *str == '\0')
-    return S21_NULL;
+  if (str == S21_NULL || *str == '\0') return S21_NULL;
   int end_str = s21_strlen(str);
   s21_size_t i = 0;
   char *result = (char *)malloc(sizeof(char));
@@ -225,8 +224,7 @@ char *exponentInStr(double number) {
 }
 
 double fractionOfE(double number) {
-  if (number == 0)
-    return 0;
+  if (number == 0) return 0;
   int minus = 0;
   if (number < 0) {
     number = -number;
@@ -248,10 +246,8 @@ double fractionOfE(double number) {
 }
 
 int exponent(double number) {
-  if (number == 0)
-    return 0;
-  if (number < 0)
-    number = -number;
+  if (number == 0) return 0;
+  if (number < 0) number = -number;
 
   int result = 0;
   if ((int)number == 0) {
@@ -278,12 +274,12 @@ char *exponentOfE(double number) {
     printError(errno);
   }
 
-  while (*charOfExponent != '\0')
-    *result++ = *charOfExponent++;
+  while (*charOfExponent != '\0') *result++ = *charOfExponent++;
 
-  char *exponentStr = malloc(3 * sizeof(char));
+  char *exponentStr = {0};
   char *ptr = exponentStr;
   if (exponentNum < 10) {
+    exponentStr = malloc(3 * sizeof(char));
     *ptr++ = '0';
     *ptr++ = (char)exponentNum + 48;
     *ptr = '\0';
@@ -291,10 +287,9 @@ char *exponentOfE(double number) {
     exponentStr = intInChar(exponentNum);
   }
 
-  while (*exponentStr)
-    *result++ = *exponentStr++;
+  while (*exponentStr) *result++ = *exponentStr++;
   *result = '\0';
-
+  free(exponentStr);
   // free(resultPtr);
   return resultPtr;
 }
