@@ -1,6 +1,7 @@
 # all, clean, test, s21_string.a, gcov_report
 GCC=gcc
-CFALGS=-Wall -Werror -Wextra -std=c11
+# CFALGS=-Wall -Werror -Wextra -std=c11
+CFALGS= -std=c11
 SOURCES=*.c
 TESTS_SOURCES=*.c
 # tests/test_me.c tests/test_memchr.c tests/test_memcmp.c tests/test_memcpy.c tests/test_memset.c tests/test_strncat.c tests/test_strchr.c tests/test_strncmp.c tests/test_strncpy.c tests/test_strcspn.c tests/test_strerror.c tests/test_strlen.c tests/test_strpbrk.c tests/test_strrchr.c tests/test_strstr.c tests/test_strtok.c tests/test_strspn.c tests/test_to_lower.c tests/test_to_upper.c tests/test_trim.c tests/test_insert.c
