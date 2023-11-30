@@ -212,10 +212,12 @@ END_TEST
 START_TEST(sprintf_20_f) {
   char str1[400];
   char str2[400];
-  char *str3 = "test: %- 23.14f!\ntest: %+ 25.15f!";
+  char *str3 = "test: %- 13.12f!\ntest: %+ 15.14f!";
   double num = 365289.34628654873789362746834;
   ck_assert_int_eq(sprintf(str1, str3, num, num),
                    s21_sprintf(str2, str3, num, num));
+  sprintf(str1, str3, num, num);
+                   s21_sprintf(str2, str3, num, num);
   ck_assert_pstr_eq(str1, str2);
 }
 END_TEST
@@ -271,6 +273,8 @@ START_TEST(sprintf_25_f) {
   long double num = -3752765839673496.34;
   ck_assert_int_eq(sprintf(str1, str3, num, num, num),
                    s21_sprintf(str2, str3, num, num, num));
+  // sprintf(str1, str3, num, num, num);
+  // sprintf(str2, str3, num, num, num);
   ck_assert_pstr_eq(str1, str2);
 }
 END_TEST

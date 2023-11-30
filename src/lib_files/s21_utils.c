@@ -73,8 +73,8 @@ int digitsInIntCounter(long long int n) {
 
 // Преобразует double в строку и возвращает указатель на нее
 char *doubleInChar(long double number) {
-  double beforeComma, afterComma;
-  afterComma = modf(number, &beforeComma);
+  long double beforeComma, afterComma;
+  afterComma = modfl(number, &beforeComma);
   if (afterComma < 0) {
     afterComma *= -1;
   }
@@ -98,13 +98,53 @@ char *doubleInChar(long double number) {
     afterComma /= 10;
   }
 
-  char *afterCommaString = intInChar((int)afterComma);
+  char *afterCommaString = intInChar((long long)afterComma);
   char *afterPtr = afterCommaString;
 
   while (*afterCommaString) {
     result[i++] = *afterCommaString++;
     result = realloc(result, sizeof(char));
   }
+
+  free(afterPtr);
+  free(beforePtr);
+
+  return result;
+}
+
+char *doubleInCharN(long double number, unsigned short n) {
+  if(n == 0) {
+    return intInChar((long long)number);
+  }
+  long double beforeComma, afterComma;
+  afterComma = modfl(number, &beforeComma);
+  if (afterComma < 0) {
+    afterComma *= -1;
+  }
+  char *result = malloc(sizeof(char));
+
+  char *beforeCommaString = intInChar(beforeComma);
+  char *beforePtr = beforeCommaString;
+  int i = 0;
+
+  while (*beforeCommaString) {
+    result[i++] = *beforeCommaString++;
+    result = realloc(result, sizeof(char));
+  }
+  result[i++] = '.';
+  result = realloc(result, sizeof(char));
+
+  afterComma += 0.5 / pow(10, n);
+  afterComma *= pow(10, n);
+
+  char *afterCommaString = intInChar((long long)afterComma);
+  char *afterPtr = afterCommaString;
+
+  while (*afterCommaString) {
+    result[i++] = *afterCommaString++;
+    result = realloc(result, sizeof(char));
+  }
+
 
   free(afterPtr);
   free(beforePtr);
@@ -165,7 +205,6 @@ char *conversionDexInHexOrOcta(int number, int numeralSystem) {
   result[j] = '\0';
 
   free(tmpResult);
-  // free(result);
   return result;
 }
 
@@ -192,7 +231,7 @@ char *reverseStr(char *str) {
     end_str--;
   }
   result[i] = '\0';
-  // free(result);
+
   return result;
 }
 
@@ -289,8 +328,8 @@ char *exponentOfE(double number) {
 
   while (*exponentStr) *result++ = *exponentStr++;
   *result = '\0';
-  free(exponentStr);
-  // free(resultPtr);
+
+  free(ptr);
   return resultPtr;
 }
 

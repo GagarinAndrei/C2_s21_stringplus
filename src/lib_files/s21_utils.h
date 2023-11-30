@@ -7,6 +7,7 @@ int digitsInIntCounter(long long n);
 char* intInChar(long long number);
 
 char* doubleInChar(long double number);
+char *doubleInCharN(long double number, unsigned short n);
 int numberAfterComma(double n);
 
 int strInInt(char ch);
