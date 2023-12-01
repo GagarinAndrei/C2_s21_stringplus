@@ -19,7 +19,7 @@ void *s21_to_lower(const char *str) {
   }
   size_t i = 0;
   for (; i < len; i++) {
-    *(line + i) = make_char_lower(str[i]);
+    *(line + i) = make_char_lower(*(str + i));
   }
   *(line + i) = '\0';
   return linePtr;
