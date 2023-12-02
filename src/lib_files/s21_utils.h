@@ -3,11 +3,12 @@
 
 int formatCounter(const char* string);
 
-int digitsInIntCounter(long long n);
+int digitsInIntCounter(unsigned long long n);
 char* intInChar(long long number);
+char *unsignedInChar(unsigned long long number);
 
 char* doubleInChar(long double number);
-char *doubleInCharN(long double number, unsigned short n);
+char *doubleInCharN(long double number, int n);
 int numberAfterComma(double n);
 
 int strInInt(char ch);
@@ -18,13 +19,13 @@ char* octaIntInChar(int number);
 char* hexaIntInChar(int number);
 
 char* reverseStr(char* str);
-char* ptrInChar(int* ptr);
+char* ptrInChar(int* ptr, int accuracy);
 
 char* exponentInStr(double number);
 double fractionOfE(double number);
 int exponent(double number);
 char* exponentOfE(double number);
 void printError(int error);
-long double roundTo(long double Number, short Precision);
+long double roundTo(long double Number, int Precision);
 
 #endif
