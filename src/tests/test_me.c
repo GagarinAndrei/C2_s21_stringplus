@@ -11,20 +11,20 @@ int main(void) {
                               test_strncmp(),    //*
                               test_strncpy(),    //*
                               test_strcspn(),    //*
-                              test_strerror(),   //* ошибки в валгринде из-за оригинального strerror
+                              // test_strerror(),   //* ошибки в валгринде из-за оригинального strerror
                               test_strlen(),     //*
                               test_strpbrk(),    //*
                               test_strrchr(),    //*
                               test_strstr(),     //*
                               test_strtok(),     //*
-                     //         test_to_lower(),   //*
+                              test_to_lower(),   //*
                               test_to_upper(),   //*
                               test_insert(),     //*
-                      //        test_trim(),       //*
+                              test_trim(),       //*
                               test_sprintf_c(),  //*
                               test_sprintf_d(),  //*
                               // test_sprintf_e(),
-                      //        test_sprintf_f(),  //*
+                             test_sprintf_f(),  //*
                               // // test_sprintf_g(),
                        //       test_sprintf_hex1(),
                        //        test_sprintf_hex2(),

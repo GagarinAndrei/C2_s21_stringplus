@@ -6,8 +6,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// #include <string.h> //dfkpgssgmbkfdgmboksmbombordbdrmbhokrsmnoknsrkbmdhm
-
 #include "s21_string.h"
 void printError(int error) {
   printf("%s\n", s21_strerror(error));

@@ -25,10 +25,9 @@ void *s21_trim(const char *src, const char *trim_chars) {
   while (end_str > start_str && flag_simbol(trim_chars, src[end_str])) {
     end_str--;
   }
-  char *result = (char *)malloc((end_str - start_str + 1) * sizeof(char));
+  char *result = (char *)malloc((end_str - start_str + 1) * sizeof(char) + 1);
   s21_strncpy(result, src + start_str, end_str - start_str + 1);
   result[end_str - start_str + 1] = '\0';
-  // free(result);
 
   return (char *)result;
 }

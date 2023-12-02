@@ -12,7 +12,7 @@ char make_char_lower(char c) {
 void *s21_to_lower(const char *str) {
   if (str == S21_NULL) return S21_NULL;
   size_t len = s21_strlen(str);
-  char *line = malloc(sizeof(char) * len);
+  char *line = malloc(sizeof(char) * len + 1);
   char *linePtr = line;
   if (line == S21_NULL) {
     return S21_NULL;
