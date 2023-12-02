@@ -263,7 +263,7 @@ char *reverseStr(char *str) {
 }
 
 // Преобразование адреса в строку
-char *ptrInChar(int *address, int accuracy ) {
+char *ptrInChar(int *address ) {
   char *str = calloc(14, sizeof(char));
   char *ptr = str;
 
@@ -284,8 +284,6 @@ char *ptrInChar(int *address, int accuracy ) {
 
   char *result = reverseStr(ptr);
   free(ptr);
-
-  *(result + accuracy) = '\0';
 
   return result;
 }

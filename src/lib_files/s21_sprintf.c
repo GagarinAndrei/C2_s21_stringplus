@@ -106,29 +106,6 @@ int nullsCounter(Arguments_s* arguments, const char* string);
 char* printSpaces(char* str, int spaces);
 char* printNulls(char* str, Arguments_s* arguments, int nulls);
 
-#define ULONG_MAX (__LONG_MAX__ *2UL+1UL)
-
-int main() {
-  char str1[1400];
-  char str2[1400];
-  
-  char *str3 = "%p Test %3.p Test %5.7p TEST %10p %#p %-p %+p %.p % .p";
-  char *val = 0;
-  
-  printf("sprintf = %d\n" , sprintf(str1, str3, val, val, val, val, val, val, val, val, val));
-  printf("s21_sprintf = %d\n" ,                 s21_sprintf(str2, str3, val, val, val, val, val, val, val, val, val));
-  // sprintf(str1, str3, val1, strTest, &ch, &valN1, val2, strTest2, val3,
-  //         strTest2, val4, ch, strTest, uVal, val5);
-  // s21_sprintf(str2, str3, val1, strTest, &ch, &valN2, val2, strTest2, val3,
-  //             strTest2, val4, ch, strTest, uVal, val5);
-  // printf("%f!!!!\n", fractionOfE(val5));
-
-  printf("$%s$\n", str1);
-  printf("$%s$\n", str2);
-
-  return 0;
-}
-
 int s21_sprintf(char* str, const char* format, ...) {
   Arguments_s arguments = {0};
   NonPrintCh_s npc;
@@ -395,10 +372,19 @@ void nSpecifierHandler(char *str, Arguments_s *arguments, va_list factor,
   *arguments->specifiers.n = value;
 }
 
+
+// -P-
 char *pSpecifierHandler(char *str, Arguments_s *arguments, va_list factor) {
   arguments->specifiers.p = va_arg(factor, int *);
   int *p = arguments->specifiers.p;
-  char *pString = ptrInChar(p, arguments->accuracy.number);
+
+  char *pString = ptrInChar(p);
+
+  if(arguments->specifiers.p == S21_NULL) {
+    if(arguments->accuracy.number || arguments->accuracy.isNull) {
+      *(pString + 2 + arguments->accuracy.number) = '\0';
+    }
+  }
 
   str = printSpecificatorP(str, arguments, pString);
 
@@ -406,6 +392,9 @@ char *pSpecifierHandler(char *str, Arguments_s *arguments, va_list factor) {
 
   return str;
 }
+
+
+
 
 char *eSpecifierHandler(char *str, Arguments_s *arguments, va_list factor) {
   if (!arguments->accuracy.isNull && arguments->accuracy.number == 0) {
@@ -793,14 +782,14 @@ char *printSpecificatorE(char *str, Arguments_s *arguments,
 char* printSpecificatorP(char* str, Arguments_s* arguments, const char* string) {
   int spaces = spacesCounter(arguments, string);
   int nulls = nullsCounter(arguments, string);
+  if(arguments->specifiers.p == S21_NULL) {
+    spaces += 2;
+    nulls += 2;
+  }
   spaces = spaces - nulls;
 
   if (!arguments->flags.minus && !arguments->flags.null) {
       str = printSpaces(str, spaces);
-  }
-
-  if (arguments->flags.space && !arguments->isNegative) {
-    *str++ = ' ';
   }
   
   while (*string) {
@@ -926,8 +915,8 @@ int nullsCounter(Arguments_s *arguments, const char *string) {
     nulls--;
   }
 
-  if(arguments->specifiers.p && arguments->accuracy.number > 12) {
-    nulls += 2;
+  if(arguments->specifiers.p) {
+    nulls = arguments->accuracy.number - (s21_strlen(s21_strchr(string, 'x')) - 1);
   }
 
   return nulls > 0 ? nulls : 0;
