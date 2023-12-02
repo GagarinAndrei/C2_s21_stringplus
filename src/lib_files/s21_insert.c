@@ -23,6 +23,5 @@ char* s21_insert(const char* src, const char* str, s21_size_t start_index) {
   s21_strncat(result, str, str_len);
   s21_strncat(result, src + index, end_src_len);
 
-  // free(result);
   return result;
 }
