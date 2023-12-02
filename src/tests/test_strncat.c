@@ -5,7 +5,7 @@ START_TEST(strncat_1) {
   char s2[30] = "Hello, world!";
   char s3[] = "Hello, world!";
   s21_size_t n = 1;
-  ck_assert_pstr_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
+  ck_assert_str_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
 }
 END_TEST
 
@@ -14,7 +14,7 @@ START_TEST(strncat_2) {
   char s2[30] = "Hello, world!";
   char s3[] = "\0";
   s21_size_t n = 1;
-  ck_assert_pstr_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
+  ck_assert_str_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
 }
 END_TEST
 
@@ -23,7 +23,7 @@ START_TEST(strncat_3) {
   char s2[30] = "Hello, world!";
   char s3[] = "\n\0\\d\f\\g\7";
   s21_size_t n = 3;
-  ck_assert_pstr_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
+  ck_assert_str_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
 }
 END_TEST
 
@@ -32,7 +32,7 @@ START_TEST(strncat_4) {
   char s2[30] = "Hello, world!";
   char s3[] = "";
   s21_size_t n = 0;
-  ck_assert_pstr_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
+  ck_assert_str_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
 }
 END_TEST
 
@@ -41,7 +41,7 @@ START_TEST(strncat_5) {
   char s2[30] = "";
   char s3[] = "Hello, world!";
   s21_size_t n = 13;
-  ck_assert_pstr_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
+  ck_assert_str_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
 }
 END_TEST
 
@@ -51,7 +51,7 @@ START_TEST(strncat_6) {
   char s3[] =
       "My name is Polina. I hate this, maybe I'm not supposed for this.";
   s21_size_t n = 6;
-  ck_assert_pstr_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
+  ck_assert_str_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
 }
 END_TEST
 
@@ -60,7 +60,7 @@ START_TEST(strncat_7) {
   char s2[30] = "";
   char s3[] = "Hello, world!";
   s21_size_t n = 3;
-  ck_assert_pstr_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
+  ck_assert_str_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
 }
 END_TEST
 
@@ -69,7 +69,7 @@ START_TEST(strncat_8) {
   char s2[100] = "Hello, world!";
   char s3[] = "My name is Polina.";
   s21_size_t n = 2;
-  ck_assert_pstr_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
+  ck_assert_str_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
 }
 END_TEST
 
@@ -78,7 +78,7 @@ START_TEST(strncat_9) {
   char s2[100] = "";
   char s3[] = "";
   s21_size_t n = 10;
-  ck_assert_pstr_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
+  ck_assert_str_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
 }
 END_TEST
 
@@ -87,7 +87,7 @@ START_TEST(strncat_10) {
   char s2[100] = "Hello\0, world!";
   char s3[] = "My name is\0 Polina.";
   s21_size_t n = 15;
-  ck_assert_pstr_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
+  ck_assert_str_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
 }
 END_TEST
 
@@ -96,7 +96,7 @@ START_TEST(strncat_11) {
   char s2[100] = "Hello, world!";
   char s3[] = "\0";
   s21_size_t n = 1;
-  ck_assert_pstr_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
+  ck_assert_str_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
 }
 END_TEST
 
@@ -105,7 +105,7 @@ START_TEST(strncat_12) {
   char s2[100] = "Hello, world!";
   char s3[] = "\0";
   s21_size_t n = 0;
-  ck_assert_pstr_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
+  ck_assert_str_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
 }
 END_TEST
 
@@ -114,7 +114,7 @@ START_TEST(strncat_13) {
   char s2[100] = "Hello, world!";
   char s3[] = "\0\0\0\0";
   s21_size_t n = 4;
-  ck_assert_pstr_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
+  ck_assert_str_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
 }
 END_TEST
 
@@ -123,7 +123,7 @@ START_TEST(strncat_14) {
   char s2[100] = "Hello, world!";
   char s3[] = "";
   s21_size_t n = 2;
-  ck_assert_pstr_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
+  ck_assert_str_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
 }
 END_TEST
 
@@ -132,7 +132,7 @@ START_TEST(strncat_15) {
   char s2[100] = "Hello, world!\0\0\0";
   char s3[] = "My name is Polina.";
   s21_size_t n = 0;
-  ck_assert_pstr_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
+  ck_assert_str_eq(strncat(s1, s3, n), s21_strncat(s2, s3, n));
 }
 END_TEST
 

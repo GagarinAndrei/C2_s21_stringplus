@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "test_me.h"
 
 START_TEST(strerror_1) {
