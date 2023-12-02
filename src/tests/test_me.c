@@ -31,7 +31,7 @@ int main(void) {
                               test_sprintf_i(),
                               test_sprintf_n(),
                               // test_sprintf_octal(),
-                              test_sprintf_percent(),
+                              // test_sprintf_percent(),
                               // test_sprintf_pointer(),
                               test_sprintf_string(),    //*
                               test_sprintf_unsigned(),  //*

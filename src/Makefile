@@ -1,7 +1,7 @@
 # all, clean, test, s21_string.a, gcov_report
 GCC=gcc
-# CFALGS=-Wall -Werror -Wextra -std=c11
-CFALGS= -std=c11
+CFALGS=-Wall -Werror -Wextra -std=c11
+# CFALGS= -std=c11
 SOURCES=*.c
 TESTS_SOURCES=*.c
 OBJECTS=$(SOURCES:.c=.o)

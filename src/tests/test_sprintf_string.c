@@ -38,16 +38,15 @@ START_TEST(sprintf_3_string) {
 }
 END_TEST
 
-// Different sizes WCHAR FOR LATER
 START_TEST(sprintf_4_string) {
   char str1[100];
   char str2[100];
-  char *str3 = "Test %ls Test2";
-  wchar_t *val = L"3wtf80";
-  sprintf(str1, str3, val);
-  s21_sprintf(str2, str3, val);
-  // ck_assert_int_eq(sprintf(str1, str3, val, val2, val3, val4),
-  //                s21_sprintf(str2, str3, val, val2, val3, val4));
+  char *str3 = "% s Test %.s Test %+s";
+  char *val = "Don't need this test";
+  char *val2 = "Just for the kicks";
+  char *val3 = "Lol";
+  ck_assert_int_eq(sprintf(str1, str3, val, val2, val3),
+                   s21_sprintf(str2, str3, val, val2, val3));
   ck_assert_pstr_eq(str1, str2);
 }
 END_TEST
@@ -261,7 +260,7 @@ Suite *test_sprintf_string(void) {
   tcase_add_test(tc, sprintf_1_string);
   tcase_add_test(tc, sprintf_2_string);
   tcase_add_test(tc, sprintf_3_string);
-  // tcase_add_test(tc, sprintf_4_string);  // WCHAR
+  tcase_add_test(tc, sprintf_4_string);
   tcase_add_test(tc, sprintf_5_string);
   tcase_add_test(tc, sprintf_6_string);
   tcase_add_test(tc, sprintf_7_string);

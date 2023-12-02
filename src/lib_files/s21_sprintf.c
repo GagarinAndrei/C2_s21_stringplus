@@ -630,12 +630,12 @@ char *printSpecificatorS(char *str, Arguments_s *arguments) {
   }
   if (arguments->flags.space) {
     if (arguments->accuracy.isNull ||
-        arguments->accuracy.number != s21_strlen(string)) {
+        arguments->accuracy.number != (int)s21_strlen(string)) {
       *str++ = ' ';
     }
   }
   if (arguments->flags.null) {
-    if (arguments->accuracy.number > s21_strlen(string)) {
+    if (arguments->accuracy.number > (int)s21_strlen(string)) {
       *str++ = '0';
     }
   }
@@ -913,9 +913,9 @@ int spacesCounter(Arguments_s *arguments, const char *string) {
     spaces = arguments->width.number - s21_strlen(ptr);
   }
   if (arguments->specifiers.s) {
-    spaces = (arguments->accuracy.number < s21_strlen(ptr))
+    spaces = (arguments->accuracy.number < (int)s21_strlen(ptr))
                  ? arguments->width.number - arguments->accuracy.number
-                 : arguments->width.number - s21_strlen(ptr);
+                 : arguments->width.number - (int)s21_strlen(ptr);
     if (arguments->flags.plus) spaces++;
   }
 
