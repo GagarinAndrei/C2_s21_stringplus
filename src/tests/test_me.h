@@ -44,6 +44,4 @@ Suite *test_sprintf_pointer(void);
 Suite *test_sprintf_string(void);
 Suite *test_sprintf_unsigned(void);
 
-
-
 #endif  // SRC_TESTS_ME_H

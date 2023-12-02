@@ -27,16 +27,18 @@ int formatCounter(const char *string) {
 }
 
 // Преобразует int в строку и возвращает указатель на нее
-char *intInChar(long long int number) {
+char *intInChar(long long number) {
   int isNegative = 0;
   if (number < 0) {
     isNegative = 1;
     number *= -1;
   }
   int i = digitsInIntCounter(number);
-  char *result = (char *)calloc(i, sizeof(char));
+  int endStr = i;
+  char *result = (char *)calloc(i + 1, sizeof(char));
   if (result == S21_NULL) {
     printError(errno);
+    exit(1);
   }
 
   int n = 0;
@@ -52,13 +54,35 @@ char *intInChar(long long int number) {
   if (isNegative) {
     result[0] = '-';
   }
-  result[s21_strlen(result)] = '\0';
+  result[endStr] = '\0';
+
+  return result;
+}
+
+char *unsignedInChar(unsigned long long number) {
+  int i = digitsInIntCounter(number);
+  int endStr = i;
+  char *result = (char *)calloc(i + 1, sizeof(char));
+  if (result == S21_NULL) {
+    printError(errno);
+    exit(1);
+  }
+
+  int n = 0;
+
+  while (i > 0) {
+    n = number % 10;
+    result[--i] = n + 48;
+    number = number / 10;
+  }
+
+  result[endStr + 1] = '\0';
 
   return result;
 }
 
 // Возвращает количество цифр в целом числе
-int digitsInIntCounter(long long int n) {
+int digitsInIntCounter(unsigned long long n) {
   int i = 0;
   if (n / 10 == 0) {
     return 1;
@@ -105,6 +129,7 @@ char *doubleInChar(long double number) {
     result[i++] = *afterCommaString++;
     result = realloc(result, sizeof(char));
   }
+  result[i] = '\0';
 
   free(afterPtr);
   free(beforePtr);
@@ -112,7 +137,7 @@ char *doubleInChar(long double number) {
   return result;
 }
 
-char *doubleInCharN(long double number, unsigned short n) {
+char *doubleInCharN(long double number, int n) {
   if(n == 0) {
     return intInChar((long long)number);
   }
@@ -128,11 +153,11 @@ char *doubleInCharN(long double number, unsigned short n) {
   int i = 0;
 
   while (*beforeCommaString) {
+    result = realloc(result, sizeof(char) + sizeof(char) * i);
     result[i++] = *beforeCommaString++;
-    result = realloc(result, sizeof(char));
   }
+  result = realloc(result, sizeof(char) + sizeof(char) * i);
   result[i++] = '.';
-  result = realloc(result, sizeof(char));
 
   afterComma += 0.5 / pow(10, n);
   afterComma *= pow(10, n);
@@ -141,10 +166,11 @@ char *doubleInCharN(long double number, unsigned short n) {
   char *afterPtr = afterCommaString;
 
   while (*afterCommaString) {
+    result = realloc(result, sizeof(char) + sizeof(char) * i);
     result[i++] = *afterCommaString++;
-    result = realloc(result, sizeof(char));
   }
-
+  result = realloc(result, sizeof(char) + sizeof(char) * i);
+  result[i] = '\0';
 
   free(afterPtr);
   free(beforePtr);
@@ -237,9 +263,10 @@ char *reverseStr(char *str) {
 }
 
 // Преобразование адреса в строку
-char *ptrInChar(int *address) {
+char *ptrInChar(int *address, int accuracy ) {
   char *str = calloc(14, sizeof(char));
   char *ptr = str;
+
 
   s21_size_t *addressPtr = (s21_size_t *)address;
   if (addressPtr == NULL) {
@@ -247,16 +274,20 @@ char *ptrInChar(int *address) {
   } else {
     while (addressPtr != 0) {
       s21_size_t lastSymbol = ((s21_size_t)addressPtr) % 16;
-      lastSymbol < 10 ? (*str = 48 + lastSymbol) : (*str = 87 + lastSymbol);
+      lastSymbol < 10 ? (*str++ = 48 + lastSymbol) : (*str++ = 87 + lastSymbol);
       addressPtr = ((s21_size_t *)(((s21_size_t)addressPtr) >> 4));
-      *str = *(str + 1);
     }
   }
-  *str = 'x';
-  *str = *(str + 1);
-  *str = '0';
+  *str++ = 'x';
+  *str++ = '0';
+  *str = '\0';
 
-  return reverseStr(ptr);
+  char *result = reverseStr(ptr);
+  free(ptr);
+
+  *(result + accuracy) = '\0';
+
+  return result;
 }
 
 char *exponentInStr(double number) {
@@ -338,7 +369,7 @@ char *exponentOfE(double number) {
   return resultPtr;
 }
 
-long double roundTo(long double number, short precision) {
+long double roundTo(long double number, int precision) {
   double div = 1.0;
   if (precision < 0) {
     while (precision++) {
