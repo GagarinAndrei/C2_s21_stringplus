@@ -10,21 +10,21 @@
 
 #include "../lib_files/s21_string.h"
 
-Suite *test_memchr(void);    // 1
-Suite *test_memcmp(void);    // 2
-Suite *test_memcpy(void);    // 3
-Suite *test_memset(void);    // 4
-Suite *test_strncat(void);   // 5
-Suite *test_strchr(void);    // 6
-Suite *test_strncmp(void);   // 7
-Suite *test_strncpy(void);   // 8
-Suite *test_strcspn(void);   // 9
-Suite *test_strerror(void);  // 10
-Suite *test_strlen(void);    // 11
-Suite *test_strpbrk(void);   // 12
-Suite *test_strrchr(void);   // 13
-Suite *test_strstr(void);    // 14
-Suite *test_strtok(void);    // 15
+Suite *test_memchr(void);
+Suite *test_memcmp(void);
+Suite *test_memcpy(void);
+Suite *test_memset(void);
+Suite *test_strncat(void);
+Suite *test_strchr(void);
+Suite *test_strncmp(void);
+Suite *test_strncpy(void);    
+Suite *test_strcspn(void);
+Suite *test_strerror(void);
+Suite *test_strlen(void);
+Suite *test_strpbrk(void);
+Suite *test_strrchr(void);
+Suite *test_strstr(void);
+Suite *test_strtok(void);
 Suite *test_to_lower(void);
 Suite *test_to_upper(void);
 Suite *test_trim(void);

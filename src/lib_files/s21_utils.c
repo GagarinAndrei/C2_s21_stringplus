@@ -2,9 +2,9 @@
 
 #include <errno.h>
 #include <math.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
 
 // #include <string.h> //dfkpgssgmbkfdgmboksmbombordbdrmbhokrsmnoknsrkbmdhm
 
@@ -104,7 +104,7 @@ char *doubleInChar(long double number) {
   }
   char *result = malloc(sizeof(char));
 
-  char *beforeCommaString = intInChar(beforeComma);
+  char *beforeCommaString = intInChar((long)beforeComma);
   char *beforePtr = beforeCommaString;
   int i = 0;
 
@@ -247,8 +247,7 @@ char *hexaIntInChar(int number) {
 }
 
 char *reverseStr(char *str) {
-  if (str == S21_NULL || *str == '\0')
-    return S21_NULL;
+  if (str == S21_NULL || *str == '\0') return S21_NULL;
   int end_str = s21_strlen(str);
   s21_size_t i = 0;
   char *result = (char *)malloc(sizeof(char));
@@ -288,13 +287,8 @@ char *ptrInChar(int *address ) {
   return result;
 }
 
-char *exponentInStr(double number) {
-  return ((int)number == 0 && number != 0) ? "e-" : "e+";
-}
-
 double fractionOfE(double number) {
-  if (number == 0)
-    return 0;
+  if (number == 0) return 0;
   int minus = 0;
   if (number < 0) {
     number = -number;
@@ -316,10 +310,8 @@ double fractionOfE(double number) {
 }
 
 int exponent(double number) {
-  if (number == 0)
-    return 0;
-  if (number < 0)
-    number = -number;
+  if (number == 0) return 0;
+  if (number < 0) number = -number;
 
   int result = 0;
   if ((int)number == 0) {
@@ -337,35 +329,39 @@ int exponent(double number) {
 }
 
 char *exponentOfE(double number) {
-  char *resultPtr = "";
   int exponentNum = exponent(number);
-  char *charOfExponent = exponentInStr(number);
-  char *result = (char *)malloc(sizeof(char));
-  resultPtr = result;
+  char *result = malloc(sizeof(char) * 30);
+  char *resultPtr = result;
   if (result == S21_NULL) {
     printError(errno);
+    exit(1);
   }
 
-  while (*charOfExponent != '\0')
-    *result++ = *charOfExponent++;
-
-  char *exponentStr = malloc(3 * sizeof(char));
-  char *ptr = exponentStr;
-  if (exponentNum < 10) {
-    *ptr++ = '0';
-    *ptr++ = (char)exponentNum + 48;
-    *ptr = '\0';
+  *result++ = 'e';
+  if((int)number == 0 && number != 0) {
+    *result++ = '-';
   } else {
-    exponentStr = intInChar(exponentNum);
+    *result++ = '+';
   }
 
-  while (*exponentStr)
-    *result++ = *exponentStr++;
+  
+  if (exponentNum < 10) {
+    *result++ = '0';
+    *result++ = (char)exponentNum + 48;
+  } else {
+    char *exponentStr = intInChar(exponentNum);
+    char *exponentStrPtr = exponentStr;
+    while (*exponentStr) {
+      *result++ = *exponentStr++;
+    }
+    free(exponentStrPtr);
+  }
+
   *result = '\0';
 
-  free(ptr);
   return resultPtr;
 }
+
 
 long double roundTo(long double number, int precision) {
   double div = 1.0;

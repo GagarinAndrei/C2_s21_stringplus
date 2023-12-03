@@ -1,6 +1,6 @@
 // #include <errno.h>
-#include "s21_string.h"
 #include <stdio.h>
+#include "s21_string.h"
 
 #ifdef __linux__
 #define MAX_ERRLIST 134
