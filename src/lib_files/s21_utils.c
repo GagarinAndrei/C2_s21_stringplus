@@ -74,7 +74,7 @@ char *unsignedInChar(unsigned long long number) {
     number = number / 10;
   }
 
-  result[endStr + 1] = '\0';
+  result[endStr] = '\0';
 
   return result;
 }
@@ -190,9 +190,9 @@ int strInInt(char ch) {
 char *conversionDexInHexOrOcta(long long number, int numeralSystem) {
   int i = 0;
   int isNegative = 0;
-  if(0 > number) {
+  if (0 > number) {
     isNegative = 1;
-  } 
+  }
   long long prevNumber = number;
 
   long long maxIntDiv = prevNumber;
@@ -220,17 +220,17 @@ char *conversionDexInHexOrOcta(long long number, int numeralSystem) {
     i--;
   }
   int j = 0;
-  
+
   while (i >= 0) {
     int shiftNumber = 0;
-    if (isNegative) { 
-        shiftNumber = 15;
-        if(i == 0) {
-          shiftNumber++; // Не понятно пока
-        }
+    if (isNegative) {
+      shiftNumber = 15;
+      if (i == 0) {
+        shiftNumber++;  // Не понятно пока
+      }
     }
 
-    if (tmpResult[i] + shiftNumber > 9) {  
+    if (tmpResult[i] + shiftNumber > 9) {
       result[j] = (char)(tmpResult[i] + shiftNumber + 87);
     } else {
       result[j] = (char)(tmpResult[i] + shiftNumber + 48);
@@ -238,7 +238,6 @@ char *conversionDexInHexOrOcta(long long number, int numeralSystem) {
     j++;
     i--;
   }
-
 
   result[j] = '\0';
 
