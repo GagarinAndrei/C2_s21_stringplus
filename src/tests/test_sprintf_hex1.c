@@ -246,7 +246,7 @@ START_TEST(sprintf_17_hex) {
   char str1[200];
   char str2[200];
   char *str3 = "fdsdsds %lx";
-  long int val = ULONG_MAX;
+  long int val = LONG_MAX;
   ck_assert_int_eq(sprintf(str1, str3, val), s21_sprintf(str2, str3, val));
   ck_assert_pstr_eq(str1, str2);
 }
