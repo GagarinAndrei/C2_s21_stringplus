@@ -8,10 +8,13 @@
 #include "s21_string.h"
 #include "s21_utils.h"
 
+#define UINT_MAX  (__INT_MAX__  *2U +1U)
+
 typedef struct {
   long long d;
   int o;
-  int x;
+  long long x;
+  int xisNull;
   int X;
   long double f;
   int fisNull;
@@ -107,21 +110,22 @@ int nullsCounter(Arguments_s *arguments, const char *string);
 char *printSpaces(char *str, int spaces);
 char *printNulls(char *str, Arguments_s *arguments, int nulls);
 
-// int main() {
-//   char str1[600];
-//   char str2[600];
+int main() {
+  char str1[600];
+  char str2[600];
 
-//   char *str3 = "%.Le\n%.2Le\n%.5Le\n%.9Le\n%.13LE!";
-//   long double num = -2599999999.;
+  #define LONG_MAX  __LONG_MAX__
+  char *str3 = "fdsdsds %lx";
+  long int val = LONG_MAX;
 
-//   sprintf(str1, str3, num, num, num, num, num);
-//                    s21_sprintf(str2, str3, num, num, num, num, num);
+  sprintf(str1, str3, val);
+                   s21_sprintf(str2, str3, val);
 
-//   printf("\n%s$\n", str1);
-//   printf("%s$\n", str2);
+  printf("\n%s$\n", str1);
+  printf("%s$\n", str2);
 
-//   return 0;
-// }
+  return 0;
+}
 
 int s21_sprintf(char *str, const char *format, ...) {
   Arguments_s arguments = {0};
@@ -356,11 +360,18 @@ char *xSpecifierHandler(char *str, Arguments_s *arguments, va_list factor) {
   if (arguments->length.h) {
     arguments->specifiers.x = (short)va_arg(factor, int);
   } else if (arguments->length.l) {
-    arguments->specifiers.x = (long)va_arg(factor, int);
+    arguments->specifiers.x = (long)va_arg(factor, long);
   } else {
     arguments->specifiers.x = va_arg(factor, int);
   }
   char *xString = hexaIntInChar(arguments->specifiers.x);
+  if(arguments->specifiers.x == 0) {
+    arguments->specifiers.xisNull = 1;
+  } 
+  if(0 > arguments->specifiers.x) {
+    arguments->isNegative = 1;
+  }
+  
   if (arguments->specifiers.X) {
     char *XString = s21_to_upper(xString);
     str = printSpecificatorX(str, arguments, XString);
@@ -368,7 +379,9 @@ char *xSpecifierHandler(char *str, Arguments_s *arguments, va_list factor) {
   } else {
     str = printSpecificatorX(str, arguments, xString);
   }
-  free(xString);
+  if(arguments->specifiers.x != 0) {
+    free(xString);
+  }
   return str;
 }
 
@@ -421,12 +434,8 @@ char *eSpecifierHandler(char *str, Arguments_s *arguments, va_list factor) {
   
   fraction = roundTo(fractionOfE(arguments->specifiers.e), arguments->accuracy.number);
 
-  // printf("fraction = %f, ", fraction);
-
   char *fractionStr = doubleInChar(fraction);
   char *fractionStrPtr = fractionStr;
-
-  // printf("fractionStr = %s, ", fractionStr);
 
   char *eString = malloc(sizeof(char) * 1000);
   if (eString == S21_NULL) {
@@ -447,7 +456,6 @@ char *eSpecifierHandler(char *str, Arguments_s *arguments, va_list factor) {
 
   char *exponent = exponentOfE(arguments->specifiers.e);
   char *exponentPtr = exponent;
-  // printf("exponent = %s, \n", exponent);
 
   while (*exponent) {
     *(eString + i) = *exponent++;
@@ -456,9 +464,6 @@ char *eSpecifierHandler(char *str, Arguments_s *arguments, va_list factor) {
   *(eString + i) = '\0';
 
   free(exponentPtr);
-
-  // printf("eString = %s, \n", eString);
-
 
   if (arguments->specifiers.E) {
     char *EString = s21_to_upper(eString);
@@ -805,8 +810,6 @@ char *printSpecificatorE(char *str, Arguments_s *arguments,
   int nulls = nullsCounter(arguments, string);
   spaces = spaces - nulls;
 
-  // printf("string = %s, spaces = %d, nulls = %d, width = %d, accuracy = %d\n", string, spaces, nulls, arguments->width.number, arguments->accuracy.number);
-
   if (!arguments->flags.minus && !arguments->flags.null) {
       str = printSpaces(str, spaces);
   }
@@ -896,7 +899,61 @@ char* printSpecificatorP(char* str, Arguments_s* arguments, const char* string) 
 }
 
 char* printSpecificatorX(char* str, Arguments_s* arguments, const char* string) {
+  int spaces = spacesCounter(arguments, string);
+  int nulls = nullsCounter(arguments, string);
+  spaces = spaces - nulls;
 
+  printf("number = %lld, string = %s, spaces = %d, nulls = %d, width = %d, accuracy = %d\n", arguments->specifiers.x, string, spaces, nulls, arguments->width.number, arguments->accuracy.number);
+
+
+  if (arguments->width.number && !arguments->flags.minus) {
+    str = printSpaces(str, spaces);
+  }
+
+  if (arguments->flags.sharp && !arguments->specifiers.xisNull) {
+    *str++ = '0';
+    if (arguments->specifiers.X) {
+      *str++ = 'X';
+    } else if (arguments->specifiers.x) {
+      *str++ = 'x';
+    }
+  }
+
+  if(arguments->accuracy.number || arguments->flags.null) {
+    str = printNulls(str, arguments, nulls);
+  }
+
+  if(arguments->flags.minus && 0 > arguments->specifiers.x) {
+    int y = 8;
+    while(y > (int)s21_strlen(string)) {
+      *str++ = 'f';
+      y--;
+      spaces--;
+    }
+  }
+
+  if(arguments->specifiers.x < 0 && !arguments->isNegative) { // обработка ul
+    int y = 16;
+    while(y > (int)s21_strlen(string)) {
+      *str++ = 'f';
+      y--;
+      spaces--;
+    }
+  }
+
+  // Проверяем если точность != 0 и значение != 0
+  if (!(arguments->accuracy.isNull && arguments->specifiers.x == 0)) {
+    // то добавляем в строку
+    while (*string) {
+      *str++ = *string++;
+    }
+  }
+  
+  if (arguments->width.number && arguments->flags.minus) {
+    str = printSpaces(str, spaces);
+  }
+
+  return str;
 }
 
 const char *accuracyHandle(const char *ch, Arguments_s *arguments,
@@ -980,10 +1037,10 @@ int spacesCounter(Arguments_s *arguments, const char *string) {
     }
   }
 
-  if (arguments->isNegative) {
+  if (arguments->isNegative && !arguments->specifiers.x) {
     spaces--;
   } else {
-    if ((arguments->flags.space || arguments->flags.plus) && !arguments->specifiers.u) {
+    if ((arguments->flags.space || arguments->flags.plus) && !arguments->specifiers.u && !arguments->specifiers.x) {
       spaces--;
     }
   }
@@ -997,6 +1054,12 @@ int spacesCounter(Arguments_s *arguments, const char *string) {
     if(!arguments->flags.sharp) {
       spaces++;
     } 
+  }
+
+  if(arguments->specifiers.xisNull) {
+    if(arguments->accuracy.isNull && arguments->specifiers.x == 0) {
+      spaces = arguments->width.number;
+    }
   }
 
   return spaces;

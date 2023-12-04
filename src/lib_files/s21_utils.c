@@ -189,22 +189,27 @@ int strInInt(char ch) {
 }
 
 // Преобразование десятичного числа в восьмеричное или шестнадцатиричное
-char *conversionDexInHexOrOcta(int number, int numeralSystem) {
+char *conversionDexInHexOrOcta(long long number, int numeralSystem) {
   int i = 0;
-  int prevNumber = number;
-  int maxIntDiv = prevNumber;
-  int tmpNumber = 0;
-  char *result = (char *)malloc(sizeof(int) * i);
+  int isNegative = 0;
+  if(0 > number) {
+    isNegative = 1;
+  } 
+  long long prevNumber = number;
+
+  long long maxIntDiv = prevNumber;
+  long long tmpNumber = 0;
+  char *result = malloc(sizeof(char) * i);
   if (result == S21_NULL) {
     printError(errno);
   }
-  int *tmpResult = (int *)malloc(sizeof(int));
+  long long *tmpResult = malloc(sizeof(long long));
   if (tmpResult == S21_NULL) {
     printError(errno);
   }
-  if (number != 0) {
-    while (maxIntDiv > 0) {
-      tmpResult = realloc(tmpResult, sizeof(int) * i + 1);
+  if (number > 0 || number < 0) {
+    while (maxIntDiv != 0) {
+      tmpResult = realloc(tmpResult, sizeof(long long) * i + 1);
       if (tmpResult == S21_NULL) {
         printError(errno);
       }
@@ -216,17 +221,26 @@ char *conversionDexInHexOrOcta(int number, int numeralSystem) {
     }
     i--;
   }
-
   int j = 0;
+  
   while (i >= 0) {
-    if (tmpResult[i] > 9) {
-      result[j] = (char)(tmpResult[i] + 87);
+    int shiftNumber = 0;
+    if (isNegative) { 
+        shiftNumber = 15;
+        if(i == 0) {
+          shiftNumber++; // Не понятно пока
+        }
+    }
+
+    if (tmpResult[i] + shiftNumber > 9) {  
+      result[j] = (char)(tmpResult[i] + shiftNumber + 87);
     } else {
-      result[j] = (char)(tmpResult[i] + 48);
+      result[j] = (char)(tmpResult[i] + shiftNumber + 48);
     }
     j++;
     i--;
   }
+
 
   result[j] = '\0';
 
@@ -235,13 +249,16 @@ char *conversionDexInHexOrOcta(int number, int numeralSystem) {
 }
 
 // ПРЕОБРАЗОВАНИЕ DEC В OCTA
-char *octaIntInChar(int number) {
+char *octaIntInChar(long long number) {
   int numeralSystem = 8;
   return conversionDexInHexOrOcta(number, numeralSystem);
 }
 
 // ПРЕОБРАЗОВАНИЕ DEC В HEXA
-char *hexaIntInChar(int number) {
+char *hexaIntInChar(long long number) {
+  if (number == 0) {
+    return "0";
+  }
   int numeralSystem = 16;
   return conversionDexInHexOrOcta(number, numeralSystem);
 }
