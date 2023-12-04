@@ -76,7 +76,7 @@ char *unsignedInChar(unsigned long long number) {
     number = number / 10;
   }
 
-  result[endStr + 1] = '\0';
+  result[endStr] = '\0';
 
   return result;
 }
@@ -199,17 +199,12 @@ char *conversionDexInHexOrOcta(long long number, int numeralSystem) {
 
   long long maxIntDiv = prevNumber;
   long long tmpNumber = 0;
-  char *result = malloc(sizeof(char) * i);
-  if (result == S21_NULL) {
-    printError(errno);
-  }
-  long long *tmpResult = malloc(sizeof(long long));
+  int *tmpResult = malloc(sizeof(int) * 1000);
   if (tmpResult == S21_NULL) {
     printError(errno);
   }
   if (number > 0 || number < 0) {
     while (maxIntDiv != 0) {
-      tmpResult = realloc(tmpResult, sizeof(long long) * i + 1);
       if (tmpResult == S21_NULL) {
         printError(errno);
       }
@@ -222,11 +217,16 @@ char *conversionDexInHexOrOcta(long long number, int numeralSystem) {
     i--;
   }
   int j = 0;
+
+  char *result = malloc(sizeof(char) * i);
+  if (result == S21_NULL) {
+    printError(errno);
+  }
   
   while (i >= 0) {
     int shiftNumber = 0;
     if (isNegative) { 
-        shiftNumber = 15;
+        shiftNumber = numeralSystem - 1;
         if(i == 0) {
           shiftNumber++; // Не понятно пока
         }
@@ -241,7 +241,6 @@ char *conversionDexInHexOrOcta(long long number, int numeralSystem) {
     i--;
   }
 
-
   result[j] = '\0';
 
   free(tmpResult);
@@ -250,6 +249,9 @@ char *conversionDexInHexOrOcta(long long number, int numeralSystem) {
 
 // ПРЕОБРАЗОВАНИЕ DEC В OCTA
 char *octaIntInChar(long long number) {
+  if (number == 0) {
+    return "0";
+  }
   int numeralSystem = 8;
   return conversionDexInHexOrOcta(number, numeralSystem);
 }
