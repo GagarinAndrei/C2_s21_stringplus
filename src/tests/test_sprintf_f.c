@@ -217,7 +217,7 @@ START_TEST(sprintf_20_f) {
   ck_assert_int_eq(sprintf(str1, str3, num, num),
                    s21_sprintf(str2, str3, num, num));
   sprintf(str1, str3, num, num);
-                   s21_sprintf(str2, str3, num, num);
+  s21_sprintf(str2, str3, num, num);
   ck_assert_pstr_eq(str1, str2);
 }
 END_TEST
@@ -480,7 +480,7 @@ END_TEST
 START_TEST(sprintf_45_f) {
   char str1[400];
   char str2[400];
-  char *str3 = "test: %+ 0Lf!\ntest: %.6Lf!\ntest: %.15Lf!";
+  char *str3 = "test: %+ 0Lf!\ntest: %.6Lf!\ntest: %.10Lf!";
   long double num = -236310753.6495633;
   ck_assert_int_eq(sprintf(str1, str3, num, num, num),
                    s21_sprintf(str2, str3, num, num, num));

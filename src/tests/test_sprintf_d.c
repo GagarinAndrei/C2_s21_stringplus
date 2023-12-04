@@ -261,7 +261,8 @@ END_TEST
 //   int val5 = INT_MAX;
 //   int val6 = INT_MIN;
 //   ck_assert_int_eq(sprintf(str1, str3, val, val2, val3, val4, val5, val6),
-//                    s21_sprintf(str2, str3, val, val2, val3, val4, val5, val6));
+//                    s21_sprintf(str2, str3, val, val2, val3, val4, val5,
+//                    val6));
 //   ck_assert_pstr_eq(str1, str2);
 // }
 // END_TEST

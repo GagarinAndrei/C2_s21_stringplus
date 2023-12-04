@@ -102,7 +102,7 @@ char *doubleInChar(long double number) {
   }
   char *result = malloc(sizeof(char));
 
-  char *beforeCommaString = intInChar(beforeComma);
+  char *beforeCommaString = intInChar((long)beforeComma);
   char *beforePtr = beforeCommaString;
   int i = 0;
 
@@ -136,7 +136,7 @@ char *doubleInChar(long double number) {
 }
 
 char *doubleInCharN(long double number, int n) {
-  if(n == 0) {
+  if (n == 0) {
     return intInChar((long long)number);
   }
   long double beforeComma, afterComma;
@@ -260,10 +260,9 @@ char *reverseStr(char *str) {
 }
 
 // Преобразование адреса в строку
-char *ptrInChar(int *address, int accuracy ) {
+char *ptrInChar(int *address) {
   char *str = calloc(14, sizeof(char));
   char *ptr = str;
-
 
   s21_size_t *addressPtr = (s21_size_t *)address;
   if (addressPtr == NULL) {
@@ -282,13 +281,7 @@ char *ptrInChar(int *address, int accuracy ) {
   char *result = reverseStr(ptr);
   free(ptr);
 
-  *(result + accuracy) = '\0';
-
   return result;
-}
-
-char *exponentInStr(double number) {
-  return ((int)number == 0 && number != 0) ? "e-" : "e+";
 }
 
 double fractionOfE(double number) {
@@ -333,32 +326,35 @@ int exponent(double number) {
 }
 
 char *exponentOfE(double number) {
-  char *resultPtr = "";
   int exponentNum = exponent(number);
-  char *charOfExponent = exponentInStr(number);
-  char *result = (char *)malloc(sizeof(char));
-  resultPtr = result;
+  char *result = malloc(sizeof(char) * 30);
+  char *resultPtr = result;
   if (result == S21_NULL) {
     printError(errno);
+    exit(1);
   }
 
-  while (*charOfExponent != '\0') *result++ = *charOfExponent++;
-
-  char *exponentStr = {0};
-  char *ptr = exponentStr;
-  if (exponentNum < 10) {
-    exponentStr = malloc(3 * sizeof(char));
-    *ptr++ = '0';
-    *ptr++ = (char)exponentNum + 48;
-    *ptr = '\0';
+  *result++ = 'e';
+  if ((int)number == 0 && number != 0) {
+    *result++ = '-';
   } else {
-    exponentStr = intInChar(exponentNum);
+    *result++ = '+';
   }
 
-  while (*exponentStr) *result++ = *exponentStr++;
+  if (exponentNum < 10) {
+    *result++ = '0';
+    *result++ = (char)exponentNum + 48;
+  } else {
+    char *exponentStr = intInChar(exponentNum);
+    char *exponentStrPtr = exponentStr;
+    while (*exponentStr) {
+      *result++ = *exponentStr++;
+    }
+    free(exponentStrPtr);
+  }
+
   *result = '\0';
 
-  free(ptr);
   return resultPtr;
 }
 
