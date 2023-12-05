@@ -108,10 +108,10 @@ char *doubleInChar(long double number) {
 
   while (*beforeCommaString) {
     result[i++] = *beforeCommaString++;
-    result = realloc(result, sizeof(char));
+    result = realloc(result, sizeof(char) + i);
   }
   result[i++] = '.';
-  result = realloc(result, sizeof(char));
+  result = realloc(result, sizeof(char) + i);
 
   afterComma += 0.0000000005;
   afterComma *= 1000000000;
@@ -125,7 +125,7 @@ char *doubleInChar(long double number) {
 
   while (*afterCommaString) {
     result[i++] = *afterCommaString++;
-    result = realloc(result, sizeof(char));
+    result = realloc(result, sizeof(char) + i);
   }
   result[i] = '\0';
 
@@ -265,9 +265,9 @@ char *hexaIntInChar(long long number) {
 
 char *reverseStr(char *str) {
   if (str == S21_NULL || *str == '\0') return S21_NULL;
-  int end_str = s21_strlen(str);
+  int end_str = s21_strlen(str) + 1;
   s21_size_t i = 0;
-  char *result = (char *)malloc(sizeof(char));
+  char *result = (char *)malloc(sizeof(char) * end_str);
   while (i < s21_strlen(str)) {
     result[i] = str[end_str - 1];
     i++;
@@ -280,7 +280,7 @@ char *reverseStr(char *str) {
 
 // Преобразование адреса в строку
 char *ptrInChar(int *address) {
-  char *str = calloc(14, sizeof(char));
+  char *str = calloc(100, sizeof(char));
   char *ptr = str;
 
   s21_size_t *addressPtr = (s21_size_t *)address;
