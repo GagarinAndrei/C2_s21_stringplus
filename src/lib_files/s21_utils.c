@@ -108,10 +108,10 @@ char *doubleInChar(long double number) {
 
   while (*beforeCommaString) {
     result[i++] = *beforeCommaString++;
-    result = realloc(result, sizeof(char));
+    result = realloc(result, sizeof(char) + i);
   }
   result[i++] = '.';
-  result = realloc(result, sizeof(char));
+  result = realloc(result, sizeof(char) + i);
 
   afterComma += 0.0000000005;
   afterComma *= 1000000000;
@@ -125,7 +125,7 @@ char *doubleInChar(long double number) {
 
   while (*afterCommaString) {
     result[i++] = *afterCommaString++;
-    result = realloc(result, sizeof(char));
+    result = realloc(result, sizeof(char) + i);
   }
   result[i] = '\0';
 
@@ -197,17 +197,12 @@ char *conversionDexInHexOrOcta(long long number, int numeralSystem) {
 
   long long maxIntDiv = prevNumber;
   long long tmpNumber = 0;
-  char *result = malloc(sizeof(char) * i);
-  if (result == S21_NULL) {
-    printError(errno);
-  }
-  long long *tmpResult = malloc(sizeof(long long));
+  int *tmpResult = malloc(sizeof(int) * 1000);
   if (tmpResult == S21_NULL) {
     printError(errno);
   }
   if (number > 0 || number < 0) {
     while (maxIntDiv != 0) {
-      tmpResult = realloc(tmpResult, sizeof(long long) * i + 1);
       if (tmpResult == S21_NULL) {
         printError(errno);
       }
@@ -221,13 +216,18 @@ char *conversionDexInHexOrOcta(long long number, int numeralSystem) {
   }
   int j = 0;
 
+  char *result = malloc(sizeof(char) * i + 2);
+  if (result == S21_NULL) {
+    printError(errno);
+  }
+  
   while (i >= 0) {
     int shiftNumber = 0;
-    if (isNegative) {
-      shiftNumber = 15;
-      if (i == 0) {
-        shiftNumber++;  // Не понятно пока
-      }
+    if (isNegative) { 
+        shiftNumber = numeralSystem - 1;
+        if(i == 0) {
+          shiftNumber++; // Не понятно пока
+        }
     }
 
     if (tmpResult[i] + shiftNumber > 9) {
@@ -247,6 +247,9 @@ char *conversionDexInHexOrOcta(long long number, int numeralSystem) {
 
 // ПРЕОБРАЗОВАНИЕ DEC В OCTA
 char *octaIntInChar(long long number) {
+  if (number == 0) {
+    return "0";
+  }
   int numeralSystem = 8;
   return conversionDexInHexOrOcta(number, numeralSystem);
 }
@@ -262,9 +265,9 @@ char *hexaIntInChar(long long number) {
 
 char *reverseStr(char *str) {
   if (str == S21_NULL || *str == '\0') return S21_NULL;
-  int end_str = s21_strlen(str);
+  int end_str = s21_strlen(str) + 1;
   s21_size_t i = 0;
-  char *result = (char *)malloc(sizeof(char));
+  char *result = (char *)malloc(sizeof(char) * end_str);
   while (i < s21_strlen(str)) {
     result[i] = str[end_str - 1];
     i++;
@@ -277,7 +280,7 @@ char *reverseStr(char *str) {
 
 // Преобразование адреса в строку
 char *ptrInChar(int *address) {
-  char *str = calloc(14, sizeof(char));
+  char *str = calloc(100, sizeof(char));
   char *ptr = str;
 
   s21_size_t *addressPtr = (s21_size_t *)address;
