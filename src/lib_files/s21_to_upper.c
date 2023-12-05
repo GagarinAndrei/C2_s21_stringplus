@@ -21,6 +21,6 @@ void* s21_to_upper(const char* str) {
     line[i] = myToUpperChar(str[i]);
   }
   line[len] = '\0';
-  
+
   return (char*)line;
 }

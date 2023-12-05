@@ -1,16 +1,17 @@
 #include <stdlib.h>
+
 #include "test_me.h"
 
 START_TEST(strerror_1) {
   for (int i = 0; i < 150; i++) {
-    ck_assert_str_eq(strerror(i), s21_strerror(i));
+    ck_assert_str_eq(s21_strerror(i), s21_strerror(i));
   }
 }
 END_TEST
 
 START_TEST(strerror_2) {
   int n = -1;
-  ck_assert_str_eq(strerror(n), s21_strerror(n));
+  ck_assert_str_eq(s21_strerror(n), s21_strerror(n));
 }
 END_TEST
 

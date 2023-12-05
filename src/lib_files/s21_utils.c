@@ -74,7 +74,7 @@ char *unsignedInChar(unsigned long long number) {
     number = number / 10;
   }
 
-  result[endStr + 1] = '\0';
+  result[endStr] = '\0';
 
   return result;
 }
@@ -102,7 +102,7 @@ char *doubleInChar(long double number) {
   }
   char *result = malloc(sizeof(char));
 
-  char *beforeCommaString = intInChar(beforeComma);
+  char *beforeCommaString = intInChar((long)beforeComma);
   char *beforePtr = beforeCommaString;
   int i = 0;
 
@@ -136,7 +136,7 @@ char *doubleInChar(long double number) {
 }
 
 char *doubleInCharN(long double number, int n) {
-  if(n == 0) {
+  if (n == 0) {
     return intInChar((long long)number);
   }
   long double beforeComma, afterComma;
@@ -187,22 +187,27 @@ int strInInt(char ch) {
 }
 
 // Преобразование десятичного числа в восьмеричное или шестнадцатиричное
-char *conversionDexInHexOrOcta(int number, int numeralSystem) {
+char *conversionDexInHexOrOcta(long long number, int numeralSystem) {
   int i = 0;
-  int prevNumber = number;
-  int maxIntDiv = prevNumber;
-  int tmpNumber = 0;
-  char *result = (char *)malloc(sizeof(int) * i);
+  int isNegative = 0;
+  if (0 > number) {
+    isNegative = 1;
+  }
+  long long prevNumber = number;
+
+  long long maxIntDiv = prevNumber;
+  long long tmpNumber = 0;
+  char *result = malloc(sizeof(char) * i);
   if (result == S21_NULL) {
     printError(errno);
   }
-  int *tmpResult = (int *)malloc(sizeof(int));
+  long long *tmpResult = malloc(sizeof(long long));
   if (tmpResult == S21_NULL) {
     printError(errno);
   }
-  if (number != 0) {
-    while (maxIntDiv > 0) {
-      tmpResult = realloc(tmpResult, sizeof(int) * i + 1);
+  if (number > 0 || number < 0) {
+    while (maxIntDiv != 0) {
+      tmpResult = realloc(tmpResult, sizeof(long long) * i + 1);
       if (tmpResult == S21_NULL) {
         printError(errno);
       }
@@ -214,13 +219,21 @@ char *conversionDexInHexOrOcta(int number, int numeralSystem) {
     }
     i--;
   }
-
   int j = 0;
+
   while (i >= 0) {
-    if (tmpResult[i] > 9) {
-      result[j] = (char)(tmpResult[i] + 87);
+    int shiftNumber = 0;
+    if (isNegative) {
+      shiftNumber = 15;
+      if (i == 0) {
+        shiftNumber++;  // Не понятно пока
+      }
+    }
+
+    if (tmpResult[i] + shiftNumber > 9) {
+      result[j] = (char)(tmpResult[i] + shiftNumber + 87);
     } else {
-      result[j] = (char)(tmpResult[i] + 48);
+      result[j] = (char)(tmpResult[i] + shiftNumber + 48);
     }
     j++;
     i--;
@@ -233,13 +246,16 @@ char *conversionDexInHexOrOcta(int number, int numeralSystem) {
 }
 
 // ПРЕОБРАЗОВАНИЕ DEC В OCTA
-char *octaIntInChar(int number) {
+char *octaIntInChar(long long number) {
   int numeralSystem = 8;
   return conversionDexInHexOrOcta(number, numeralSystem);
 }
 
 // ПРЕОБРАЗОВАНИЕ DEC В HEXA
-char *hexaIntInChar(int number) {
+char *hexaIntInChar(long long number) {
+  if (number == 0) {
+    return "0";
+  }
   int numeralSystem = 16;
   return conversionDexInHexOrOcta(number, numeralSystem);
 }
@@ -260,10 +276,9 @@ char *reverseStr(char *str) {
 }
 
 // Преобразование адреса в строку
-char *ptrInChar(int *address, int accuracy ) {
+char *ptrInChar(int *address) {
   char *str = calloc(14, sizeof(char));
   char *ptr = str;
-
 
   s21_size_t *addressPtr = (s21_size_t *)address;
   if (addressPtr == NULL) {
@@ -282,13 +297,7 @@ char *ptrInChar(int *address, int accuracy ) {
   char *result = reverseStr(ptr);
   free(ptr);
 
-  *(result + accuracy) = '\0';
-
   return result;
-}
-
-char *exponentInStr(double number) {
-  return ((int)number == 0 && number != 0) ? "e-" : "e+";
 }
 
 double fractionOfE(double number) {
@@ -333,32 +342,35 @@ int exponent(double number) {
 }
 
 char *exponentOfE(double number) {
-  char *resultPtr = "";
   int exponentNum = exponent(number);
-  char *charOfExponent = exponentInStr(number);
-  char *result = (char *)malloc(sizeof(char));
-  resultPtr = result;
+  char *result = malloc(sizeof(char) * 30);
+  char *resultPtr = result;
   if (result == S21_NULL) {
     printError(errno);
+    exit(1);
   }
 
-  while (*charOfExponent != '\0') *result++ = *charOfExponent++;
-
-  char *exponentStr = {0};
-  char *ptr = exponentStr;
-  if (exponentNum < 10) {
-    exponentStr = malloc(3 * sizeof(char));
-    *ptr++ = '0';
-    *ptr++ = (char)exponentNum + 48;
-    *ptr = '\0';
+  *result++ = 'e';
+  if ((int)number == 0 && number != 0) {
+    *result++ = '-';
   } else {
-    exponentStr = intInChar(exponentNum);
+    *result++ = '+';
   }
 
-  while (*exponentStr) *result++ = *exponentStr++;
+  if (exponentNum < 10) {
+    *result++ = '0';
+    *result++ = (char)exponentNum + 48;
+  } else {
+    char *exponentStr = intInChar(exponentNum);
+    char *exponentStrPtr = exponentStr;
+    while (*exponentStr) {
+      *result++ = *exponentStr++;
+    }
+    free(exponentStrPtr);
+  }
+
   *result = '\0';
 
-  free(ptr);
   return resultPtr;
 }
 

@@ -17,7 +17,7 @@ Suite *test_memset(void);
 Suite *test_strncat(void);
 Suite *test_strchr(void);
 Suite *test_strncmp(void);
-Suite *test_strncpy(void);    
+Suite *test_strncpy(void);
 Suite *test_strcspn(void);
 Suite *test_strerror(void);
 Suite *test_strlen(void);

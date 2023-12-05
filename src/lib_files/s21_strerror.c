@@ -1,5 +1,6 @@
 // #include <errno.h>
 #include <stdio.h>
+
 #include "s21_string.h"
 
 #ifdef __linux__

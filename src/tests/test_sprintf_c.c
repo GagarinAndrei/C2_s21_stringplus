@@ -255,7 +255,6 @@ Suite *test_sprintf_c(void) {
   tcase_add_test(tc, sprintf_18_c);
   tcase_add_test(tc, sprintf_19_c);
 
-
   suite_add_tcase(s, tc);
   return s;
 }

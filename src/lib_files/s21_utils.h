@@ -13,15 +13,14 @@ int numberAfterComma(double n);
 
 int strInInt(char ch);
 
-char* conversionDexInHexOrOcta(int number, int numeralSystem);
+char* conversionDexInHexOrOcta(long long number, int numeralSystem);
 
-char* octaIntInChar(int number);
-char* hexaIntInChar(int number);
+char* octaIntInChar(long long number);
+char* hexaIntInChar(long long number);
 
 char* reverseStr(char* str);
-char* ptrInChar(int* ptr, int accuracy);
+char* ptrInChar(int* ptr);
 
-char* exponentInStr(double number);
 double fractionOfE(double number);
 int exponent(double number);
 char* exponentOfE(double number);
