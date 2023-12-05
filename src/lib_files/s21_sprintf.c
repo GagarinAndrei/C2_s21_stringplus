@@ -176,7 +176,7 @@ char *specifiersHandler(char *str, const char *ch, Arguments_s *arguments,
     case 'G':
     case 'g':
       if(*ch == 'G') arguments->specifiers.G = 1;
-      str = gSpecifierHandler(str, arguments, factor);
+      // str = gSpecifierHandler(str, arguments, factor);
       break;
     case 'o':
       str = oSpecifierHandler(str, arguments, factor);
