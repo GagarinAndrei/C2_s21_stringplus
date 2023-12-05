@@ -216,7 +216,7 @@ char *conversionDexInHexOrOcta(long long number, int numeralSystem) {
   }
   int j = 0;
 
-  char *result = malloc(sizeof(char) * i);
+  char *result = malloc(sizeof(char) * i + 2);
   if (result == S21_NULL) {
     printError(errno);
   }
