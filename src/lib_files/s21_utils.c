@@ -91,7 +91,7 @@ int digitsInIntCounter(unsigned long long n) {
     }
     return i;
   }
-};
+}
 
 // Преобразует double в строку и возвращает указатель на нее
 char *doubleInChar(long double number) {
@@ -220,14 +220,14 @@ char *conversionDexInHexOrOcta(long long number, int numeralSystem) {
   if (result == S21_NULL) {
     printError(errno);
   }
-  
+
   while (i >= 0) {
     int shiftNumber = 0;
-    if (isNegative) { 
-        shiftNumber = numeralSystem - 1;
-        if(i == 0) {
-          shiftNumber++; // Не понятно пока
-        }
+    if (isNegative) {
+      shiftNumber = numeralSystem - 1;
+      if (i == 0) {
+        shiftNumber++;
+      }
     }
 
     if (tmpResult[i] + shiftNumber > 9) {
@@ -265,7 +265,7 @@ char *hexaIntInChar(long long number) {
 
 char *reverseStr(char *str) {
   if (str == S21_NULL || *str == '\0') return S21_NULL;
-  int end_str = s21_strlen(str) + 1;
+  int end_str = s21_strlen(str) * 5;
   s21_size_t i = 0;
   char *result = (char *)malloc(sizeof(char) * end_str);
   while (i < s21_strlen(str)) {
