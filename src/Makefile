@@ -29,7 +29,7 @@ gcov_report: clean s21_string.a
 	./s21_string
 	lcov -t "./s21_string" -o report.info --no-external -c -d .
 	genhtml -o report report.info
-	open ./report/index.html
+	firefox ./report/index.html
 
 clean:
 	rm -rf s21_string *.a $(OBJECTS) a.out *.gcno *.gcda report app.info

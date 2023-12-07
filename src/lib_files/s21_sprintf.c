@@ -794,6 +794,7 @@ char *printSpecificatorP(char *str, Arguments_s *arguments,
   if (!arguments->flags.minus && !arguments->flags.null) {
     str = printSpaces(str, spaces);
   }
+  *str++ = *string++;
 
   while (*string) {
     if (*(string - 1) == 'x') {

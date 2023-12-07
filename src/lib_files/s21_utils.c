@@ -265,17 +265,18 @@ char *hexaIntInChar(long long number) {
 
 char *reverseStr(char *str) {
   if (str == S21_NULL || *str == '\0') return S21_NULL;
-  int end_str = s21_strlen(str) * 5;
+  int end_str = s21_strlen(str);
   s21_size_t i = 0;
-  char *result = (char *)malloc(sizeof(char) * end_str);
+  char *result = (char *)malloc(sizeof(char) * end_str + 10);
+  char *resultPtr = result;
   while (i < s21_strlen(str)) {
     result[i] = str[end_str - 1];
     i++;
     end_str--;
   }
-  result[i] = '\0';
+  result[s21_strlen(str)] = '\0';
 
-  return result;
+  return resultPtr;
 }
 
 // Преобразование адреса в строку
